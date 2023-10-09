@@ -47,8 +47,6 @@ const links = [
 ]
 
 const isActivePage = (link) => {
-    console.log('Active: ' + route().current())
-    console.log(`Is ${link.name} the active page?`)
     return link.name === route().current()
 }
 

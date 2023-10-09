@@ -35,7 +35,7 @@ const logout = () => {
         <ApplicationBar :on-toggle-navigation-drawer="onToggleNavigationDrawerHandler"/>
 
         <v-main>
-            <v-container>
+            <v-container class="pt-0">
                 <slot/>
             </v-container>
         </v-main>
