@@ -7,34 +7,50 @@ import {
     mdiPoliceBadge
 } from "@mdi/js";
 import {router} from "@inertiajs/vue3";
+import {reactive} from "vue";
+
+const state = reactive({
+    activePage: '/'
+});
 
 const links = [
     {
-        title: 'Dashboard',
+        text: 'Dashboard',
+        name: 'dashboard',
         icon: mdiMonitorDashboard,
         link: '/dashboard'
     },
     {
-        title: 'Users',
+        text: 'Users',
         icon: mdiAccountMultiple,
+        name: 'users.index',
         link: '/users'
     },
     {
-        title: 'Roles',
+        text: 'Roles',
+        name: 'roles.index',
         icon: mdiHardHat,
         link: '/roles'
     },
     {
-        title: 'Permissions',
+        text: 'Permissions',
+        name: 'permissions.index',
         icon: mdiPoliceBadge,
         link: '/permissions'
     },
     {
-        title: 'Access Logs',
+        text: 'Access Logs',
+        name: 'access-logs.index',
         icon: mdiSecurity,
         link: '/access-logs'
     },
 ]
+
+const isActivePage = (link) => {
+    console.log('Active: ' + route().current())
+    console.log(`Is ${link.name} the active page?`)
+    return link.name === route().current()
+}
 
 const navigate = (url) => {
     router.visit(url)
@@ -53,16 +69,19 @@ const navigate = (url) => {
             subtitle="Some random text here"
         >
         </v-list-item>
-        <v-list color="transparent" nav>
+        <v-list nav :lines="false" v-model="state.activePage">
             <v-list-item
                 v-for="link in links"
                 :key="link.link"
                 :prepend-icon="link.icon"
                 @click="navigate(link.link)"
+                :active="isActivePage(link)"
+                color="primary"
+                :value="link"
             >
                 <slot name="title">
                     <span style="font-weight: 700; color: #979ea9">
-                        {{ link.title }}
+                        {{ link.text }}
                     </span>
                 </slot>
             </v-list-item>
