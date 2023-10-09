@@ -13,8 +13,12 @@ class PermissionController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Permissions',
-                'link' => '/permissions'
-            ]
+                'href' => '/permissions'
+            ],
+            [
+                'title' => 'View Users',
+                'href' => '/permissions/1'
+            ],
         ];
         return Inertia::render('Security/Permissions', [
             'breadcrumbs' => $breadcrumbs

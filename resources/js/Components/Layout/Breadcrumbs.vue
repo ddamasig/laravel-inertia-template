@@ -7,11 +7,18 @@ const props = defineProps({
 const navigate = (url) => {
     router.visit(url)
 }
-
-console.log('Breacrumbs:')
-console.log(props.items)
 </script>
 
 <template>
-    <v-breadcrumbs :items="props.items"></v-breadcrumbs>
+    <v-breadcrumbs
+        class="px-0 py-2"
+        color="primary"
+        :items="props.items"
+    />
 </template>
+
+<style>
+.v-breadcrumbs-item--disabled {
+    opacity: 0.7 !important;
+}
+</style>

@@ -14,6 +14,11 @@ import * as directives from 'vuetify/directives'
 // import { aliases, fa } from 'vuetify/iconsets/fa'
 // import '@fortawesome/fontawesome-free/css/all.css'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import {
+    VDataTable,
+    VDataTableServer,
+    VDataTableVirtual,
+} from "vuetify/labs/VDataTable";
 
 const mainTheme = {
     dark: false,
@@ -23,7 +28,7 @@ const mainTheme = {
         'paper-dark-text': '#979ea9',
         'muted': '#6C737F',
         surface: '#FFFFFF',
-        primary: '#B00020',
+        primary: '#6265ef',
         'primary-darken-1': '#3700B3',
         secondary: '#03DAC6',
         'secondary-darken-1': '#018786',
@@ -35,7 +40,12 @@ const mainTheme = {
 }
 
 const vuetify = createVuetify({
-    components,
+    components: {
+        ...components,
+        VDataTable,
+        VDataTableServer,
+        VDataTableVirtual,
+    },
     directives,
     theme: {
         defaultTheme: 'mainTheme',
