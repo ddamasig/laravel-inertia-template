@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
@@ -19,11 +20,7 @@ class PermissionController extends Controller
             [
                 'title' => 'Permissions',
                 'href' => '/permissions'
-            ],
-            [
-                'title' => 'View Users',
-                'href' => '/permissions/1'
-            ],
+            ]
         ];
 
         $resources = QueryBuilder::for(Permission::class)
@@ -37,9 +34,102 @@ class PermissionController extends Controller
             ->orderBy('name', 'asc')
             ->paginate($itemsPerPage);
 
-        return Inertia::render('Security/Permissions', [
+        return Inertia::render('Security/Permissions/Index', [
             'breadcrumbs' => $breadcrumbs,
             'paginated' => $resources
         ]);
+    }
+
+    public function create(Request $request): \Inertia\Response
+    {
+        $breadcrumbs = [
+            [
+                'title' => 'Permissions',
+                'href' => '/permissions'
+            ],
+            [
+                'title' => 'Create',
+            ],
+        ];
+
+        return Inertia::render('Security/Permissions/Create', [
+            'breadcrumbs' => $breadcrumbs,
+        ]);
+    }
+
+    public function show(Permission $permission): \Inertia\Response
+    {
+        $breadcrumbs = [
+            [
+                'title' => 'Permissions',
+                'href' => '/permissions'
+            ],
+            [
+                'title' => $permission->name,
+            ],
+        ];
+
+        return Inertia::render('Security/Permissions/Show', [
+            'breadcrumbs' => $breadcrumbs,
+            'permission' => $permission,
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $input = $request->validate([
+            'name' => 'required|max:512|unique:permissions,name',
+            'description' => 'required|max:1024',
+        ]);
+
+        try {
+            Permission::create($input);
+        } catch (\Exception $exception) {
+        }
+        return to_route('permissions.index');
+    }
+
+    public function edit(Request $request, Permission $permission): \Inertia\Response
+    {
+        $breadcrumbs = [
+            [
+                'title' => 'Permissions',
+                'href' => '/permissions'
+            ],
+            [
+                'title' => $permission->name,
+                'href' => "/permissions/$permission->id"
+            ],
+            [
+                'title' => 'Edit',
+            ],
+        ];
+
+        return Inertia::render('Security/Permissions/Edit', [
+            'breadcrumbs' => $breadcrumbs,
+            'permission' => $permission,
+        ]);
+
+    }
+
+    public function update(Request $request, Permission $permission)
+    {
+        $input = $request->validate([
+            'name' => "required|max:512|unique:permissions,name,$permission->id",
+            'description' => 'required|max:1024',
+        ]);
+
+        $parameters = [
+            'permission' => $permission->id,
+            'errorBags' => [
+                'default' => []
+            ]
+        ];
+
+        $permission->name = $input['name'];
+        $permission->description = $input['description'];
+        $permission->save();
+
+        return to_route('permissions.show', $parameters);
     }
 }

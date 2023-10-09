@@ -11,7 +11,7 @@ const navigate = (url) => {
 
 <template>
     <v-breadcrumbs
-        class="px-0 pb-2 pt-0"
+        class="px-0 pb-0 pt-2"
         color="primary"
         :items="props.items"
     />

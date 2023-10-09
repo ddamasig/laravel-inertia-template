@@ -5,7 +5,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <span class="text-h4 font-weight-bold">
+    <span class="text-h5 font-weight-bold text-paper-dark">
         {{ title }}
     </span>
 </template>

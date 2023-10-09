@@ -16,38 +16,38 @@ const state = reactive({
 const links = [
     {
         text: 'Dashboard',
-        name: 'dashboard',
+        group: 'dashboard',
         icon: mdiMonitorDashboard,
         link: '/dashboard'
     },
     {
         text: 'Users',
         icon: mdiAccountMultiple,
-        name: 'users.index',
+        group: 'users',
         link: '/users'
     },
     {
         text: 'Roles',
-        name: 'roles.index',
+        group: 'roles',
         icon: mdiHardHat,
         link: '/roles'
     },
     {
         text: 'Permissions',
-        name: 'permissions.index',
+        group: 'permissions',
         icon: mdiPoliceBadge,
         link: '/permissions'
     },
     {
         text: 'Access Logs',
-        name: 'access-logs.index',
+        group: 'access-logs',
         icon: mdiSecurity,
         link: '/access-logs'
     },
 ]
 
 const isActivePage = (link) => {
-    return link.name === route().current()
+    return route().current().startsWith(link.group)
 }
 
 const navigate = (url) => {
@@ -62,7 +62,7 @@ const navigate = (url) => {
     >
         <v-list-item
             class="py-3 "
-            prepend-avatar="images/dropbox.png"
+            prepend-avatar="/images/logo.png"
             title="Generic App"
             subtitle="Some random text here"
         >
