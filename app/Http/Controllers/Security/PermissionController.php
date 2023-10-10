@@ -36,7 +36,7 @@ class PermissionController extends Controller
 
         return Inertia::render('Security/Permissions/Index', [
             'breadcrumbs' => $breadcrumbs,
-            'paginated' => $resources
+            'resources' => $resources
         ]);
     }
 

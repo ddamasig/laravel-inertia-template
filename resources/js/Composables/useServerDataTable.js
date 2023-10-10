@@ -28,9 +28,9 @@ export function useServerDataTable({url, only, filters, paginated}) {
             router.get(`${url}?${qs}`, {
                 only,
             }, {
-                preserveState: true
+                preserveState: true,
+                onFinish: () => loading.value = false
             })
-            loading.value = false
         } catch (error) {
             console.error(error)
         }
