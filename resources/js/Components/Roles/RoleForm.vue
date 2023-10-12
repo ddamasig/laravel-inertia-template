@@ -30,7 +30,7 @@ const onSubmitHandler = () => {
         onStart: () => {
             form.processing = true
         },
-        onError: (error) => {
+        onError: () => {
             alert.error('Error', `Failed to ${action} role ${form.name}.`)
         },
         onSuccess: () => {
@@ -95,7 +95,8 @@ const onSubmitHandler = () => {
                             :readonly="disabled"
                         />
                     </v-col>
-                    <v-col cols="12" lg="6" class="border-b">
+                    <v-divider vertical class="d-none d-lg-block"/>
+                    <v-col cols="12" lg="6">
                         <PermissionFormSelector
                             v-model="form.permissions"
                             :permissions="permissions"
@@ -105,7 +106,7 @@ const onSubmitHandler = () => {
                 </v-row>
             </v-card-text>
             <v-card-actions
-                class="px-4"
+                class="px-4 border-t"
             >
                 <v-spacer/>
                 <v-btn

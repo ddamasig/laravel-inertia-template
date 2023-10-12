@@ -159,7 +159,7 @@ class RoleController extends Controller
 
         DB::beginTransaction();
         try {
-            $role->name = $input['name'];
+            $role->nam = $input['name'];
             $role->description = $input['description'];
             $role->save();
 
@@ -167,6 +167,7 @@ class RoleController extends Controller
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            throw $exception;
         }
 
         return to_route('roles.show', [
