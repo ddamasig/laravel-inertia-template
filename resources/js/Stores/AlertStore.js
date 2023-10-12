@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref, watch} from "vue";
 
-export const useAlertStore = defineStore('counter', () => {
+export const useAlertStore = defineStore('alert', () => {
     const alerts = ref([]);
 
     function unshift(title, content, type) {

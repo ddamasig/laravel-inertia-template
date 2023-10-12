@@ -18,6 +18,7 @@ const props = defineProps({
         <PageHeader title="Create Permission"/>
         <Breadcrumbs :items="props.breadcrumbs"/>
       </div>
+
       <v-divider class="mt-3"/>
 
       <v-row class="mt-4">

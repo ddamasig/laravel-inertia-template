@@ -1,23 +1,18 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import {router, useForm} from "@inertiajs/vue3";
+import {router} from "@inertiajs/vue3";
 import {reactive, ref} from "vue";
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
-import {mdiDotsVertical, mdiMagnify} from "@mdi/js";
+import {mdiMagnify} from "@mdi/js";
 import {useServerDataTable} from "@/Composables/useServerDataTable.js";
 import {useDisplayDateFormat} from "@/Composables/useDisplayDateFormat.js";
 import TableRowActionButton from "@/Components/Common/Tables/TableRowActionButton.vue";
-import ConfirmationModal from "@/Components/Common/Modals/ConfirmationModal.vue";
-import {useConfirmDialog} from "@vueuse/core";
-import Alert from "@/Components/Common/Notifications/Alert.vue";
 import {useAlertStore} from "@/Stores/AlertStore.js";
+import {useConfirmModalStore} from "@/Stores/ConfirmModalStore.js";
 
-const deleteModal = useConfirmDialog()
+const deleteModal = useConfirmModalStore()
 const selectedRow = ref(null)
-const form = useForm({
-    id: null
-})
 const alert = useAlertStore()
 
 const {
@@ -54,39 +49,29 @@ const getTableRowActions = (row) => {
     return [
         {
             title: 'Delete',
-            action: () => deleteModal.reveal(row)
+            action: () => deleteModal.open({
+                title: 'Confirm Deletion',
+                content: "Please note that by deleting this permission, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
+                onConfirm: () => {
+                    router.delete(`/permissions/${row.id}`, {
+                        onSuccess: () => alert.success('Deleted', `Permission ${row.name} has been successfully deleted.`),
+                        onError: () => alert.success('Error', `Failed to delete Permission ${row.name}`),
+                        onFinish: () => deleteModal.close()
+                    })
+                },
+                onCancel: (() => {
+                    console.log('onCancel()...')
+                })
+            })
         }
     ]
 }
-
-deleteModal.onReveal((row) => {
-    selectedRow.value = row
-})
-
-deleteModal.onConfirm(() => {
-    form.delete(`/permissions/${selectedRow.value.id}`, {
-        onSuccess: () => alert.success('Deleted', `Permission ${selectedRow.value.name} has been successfully deleted.`),
-        onError: (error) => console.error(error),
-    })
-    // router.delete(`/permissions/${selectedRow.value.id}`, {
-    //     onSuccess: () => console.log('Success!'),
-    //     onError: (error) => console.error(error),
-    // })
-})
 
 </script>
 
 <template>
     <AppLayout>
         <v-sheet>
-            <ConfirmationModal
-                v-if="deleteModal.isRevealed.value"
-                @confirm="deleteModal.confirm"
-                @cancel="deleteModal.cancel"
-                title="Confirm Deletion"
-                content="Please note that by deleting this permission, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?"
-                :data="selectedRow"
-            />
             <PageHeader title="Permissions"/>
             <Breadcrumbs :items="props.breadcrumbs"/>
             <v-divider class="mt-3"/>

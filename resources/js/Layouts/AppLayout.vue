@@ -5,6 +5,7 @@ import NavigationDrawer from "@/Components/Layout/NavigationDrawer.vue";
 import ApplicationBar from "@/Components/Layout/ApplicationBar.vue";
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import Alert from "@/Components/Common/Notifications/Alert.vue";
+import ConfirmationModal from "@/Components/Common/Modals/ConfirmationModal.vue";
 
 const props = defineProps({
     title: String,
@@ -40,6 +41,7 @@ const logout = () => {
                 <v-row>
                     <v-col cols="12">
                         <Alert/>
+                        <ConfirmationModal/>
                     </v-col>
                 </v-row>
                 <slot/>
