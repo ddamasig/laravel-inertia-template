@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import {computed} from 'vue'
 
-const props = defineProps({ status: Number })
+const props = defineProps({status: Number})
 
 const title = computed(() => {
     return {
@@ -23,8 +23,14 @@ const description = computed(() => {
 </script>
 
 <template>
-    <div>
-        <H1>{{ title }}</H1>
-        <div>{{ description }}</div>
-    </div>
+    <v-container fluid class="pa-0" style="height: 100vh">
+        <v-row class="bg-blue ma-0 fill-height" justify="center">
+            <v-col cols="12" class="bg-paper-dark" style="display: flex; flex-direction: column">
+                <div class="my-auto">
+                    <h1 class="text-center">{{ title }}</h1>
+                    <p class="text-center">{{ description }}</p>
+                </div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
