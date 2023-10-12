@@ -26,6 +26,7 @@ class RoleSeeder extends Seeder
             $r = Role::firstOrCreate([
                 'name' => $role['name'],
                 'description' => $role['description'],
+                'guard_name' => 'sanctum'
             ]);
             $r->syncPermissions($role['permissions']);
         }

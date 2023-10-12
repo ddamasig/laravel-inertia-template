@@ -6,6 +6,7 @@ import RoleForm from "@/Components/Roles/RoleForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,
+    permissions: Array,
     errorBags: Object,
     role: Object,
 })
@@ -23,7 +24,7 @@ const props = defineProps({
 
             <v-row class="mt-4">
                 <v-col cols="12">
-                    <RoleForm :role="props.role" :disabled="true"/>
+                    <RoleForm :role="props.role" :disabled="true" :permissions="permissions"/>
                 </v-col>
             </v-row>
         </v-sheet>

@@ -2,16 +2,21 @@
 import {router, useForm} from "@inertiajs/vue3";
 import {reactive} from "vue";
 import {useAlertStore} from "@/Stores/AlertStore.js";
+import PermissionFormSelectorItem from "@/Components/Permissions/PermissionFormSelector/PermissionFormSelectorItem.vue";
+import {mdiMagnify} from "@mdi/js";
+import PermissionFormSelector from "@/Components/Permissions/PermissionFormSelector/PermissionFormSelector.vue";
 
 const alert = useAlertStore()
 const props = defineProps({
     role: Object,
+    permissions: Array,
     disabled: Boolean
 })
 
 const form = useForm({
     name: props.role?.name ?? null,
-    description: props.role?.description ?? null
+    description: props.role?.description ?? null,
+    permissions: props.role?.permissions ?? []
 })
 
 const state = reactive({
@@ -23,65 +28,81 @@ const onSubmitHandler = () => {
     const options = {
         preserveState: true,
         onStart: () => {
-            state.loading = true
+            form.processing = true
         },
-        onError: () => {
+        onError: (error) => {
             alert.error('Error', `Failed to ${action} role ${form.name}.`)
         },
         onSuccess: () => {
             alert.success('Success', `Successfully ${action}d role ${form.name}.`)
         },
-        onFinish: () => state.loading = false,
+        onFinish: () => form.processing = false,
     }
+
+    const transformFunction = (data) => ({
+        ...data,
+        permissions: data.permissions.map(p => p.name)
+    })
 
     if (props.disabled) {
         return
     }
 
     if (props.role) {
-        form.put(`/roles/${props.role.id}`, options)
+        form.transform(transformFunction).put(`/roles/${props.role.id}`, options)
         return
     }
 
-    form.post('/roles', options)
+    form.transform(transformFunction).post('/roles', options)
 }
 </script>
 
 <template>
-    <v-form @submit.prevent="onSubmitHandler" :disabled="state.loading">
-        <v-card elevation="0" border max-width="700px" :loading="state.loading">
+    <v-form @submit.prevent="onSubmitHandler" :disabled="form.processing">
+        <v-card elevation="0" border :loading="form.processing">
             <template v-slot:loader>
-                <v-progress-linear color="primary" indeterminate v-show="state.loading"/>
+                <v-progress-linear color="primary" indeterminate v-show="form.processing"/>
             </template>
-            <v-card-title class="mb-1">
-                Basic Information
-            </v-card-title>
-            <v-card-text>
-                <v-text-field
-                    v-model="form.name"
-                    label="Name"
-                    variant="outlined"
-                    density="compact"
-                    color="primary"
-                    class="mb-4"
-                    autofocus
-                    @input="form.clearErrors('name')"
-                    :error="!!form.errors.name"
-                    :error-messages="form.errors.name"
-                    :readonly="disabled"
-                />
-                <v-textarea
-                    v-model="form.description"
-                    label="Description"
-                    variant="outlined"
-                    density="compact"
-                    color="primary"
-                    auto-grow
-                    @input="form.clearErrors('description')"
-                    :error="!!form.errors.description"
-                    :error-messages="form.errors.description"
-                    :readonly="disabled"
-                />
+            <v-card-text class="pt-2">
+                <v-row>
+                    <v-col cols="12" lg="6">
+                        <h2 class="d-block v-card-title px-0">
+                            Basic Information
+                        </h2>
+                        <v-text-field
+                            v-model="form.name"
+                            label="Name"
+                            variant="outlined"
+                            density="compact"
+                            color="primary"
+                            class="mb-4"
+                            autofocus
+                            @input="form.clearErrors('name')"
+                            :error="!!form.errors.name"
+                            :error-messages="form.errors.name"
+                            :readonly="disabled"
+                        />
+                        <v-textarea
+                            v-model="form.description"
+                            label="Description"
+                            variant="outlined"
+                            density="compact"
+                            color="primary"
+                            auto-grow
+                            @input="form.clearErrors('description')"
+                            :error="!!form.errors.description"
+                            :error-messages="form.errors.description"
+                            :readonly="disabled"
+                        />
+                    </v-col>
+                    <v-col cols="12" lg="6" class="border-b">
+                        <PermissionFormSelector
+                            v-model="form.permissions"
+                            :permissions="permissions"
+                            :disabled="disabled"
+                        />
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-actions
                 class="px-4"
@@ -93,7 +114,7 @@ const onSubmitHandler = () => {
                     variant="flat"
                     color="primary"
                     min-width="120px"
-                    :loading="state.loading"
+                    :loading="form.processing"
                     @click="router.get(`/roles/${role.id}/edit`)"
                 >
                     Edit
@@ -104,7 +125,7 @@ const onSubmitHandler = () => {
                     variant="flat"
                     color="primary"
                     min-width="120px"
-                    :loading="state.loading"
+                    :loading="form.processing"
                     :disabled="!form.isDirty"
                 >
                     Save

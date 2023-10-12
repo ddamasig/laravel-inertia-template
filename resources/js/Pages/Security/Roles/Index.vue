@@ -42,7 +42,7 @@ const state = reactive({
 
 const props = defineProps({
     breadcrumbs: Array,
-    resources: Object
+    resources: Object,
 })
 
 const getTableRowActions = (row) => {
