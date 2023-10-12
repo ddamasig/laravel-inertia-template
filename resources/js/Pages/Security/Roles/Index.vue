@@ -48,6 +48,10 @@ const props = defineProps({
 const getTableRowActions = (row) => {
     return [
         {
+            title: 'Edit',
+            action: () => router.get(`roles/${row.id}/edit`)
+        },
+        {
             title: 'Delete',
             action: () => deleteModal.open({
                 title: 'Confirm Deletion',
@@ -60,7 +64,7 @@ const getTableRowActions = (row) => {
                     })
                 },
             })
-        }
+        },
     ]
 }
 

@@ -1,27 +1,21 @@
 import './bootstrap';
 import '../css/app.css';
 
-import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+import {createApp, h} from 'vue';
+import {createInertiaApp} from '@inertiajs/vue3';
+import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
+import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 // Pinia
-import { createPinia } from 'pinia'
+import {createPinia} from 'pinia'
 
 // Vuetify
 import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
+import {createVuetify} from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-// import { aliases, fa } from 'vuetify/iconsets/fa'
-// import '@fortawesome/fontawesome-free/css/all.css'
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
-import {
-    VDataTable,
-    VDataTableServer,
-    VDataTableVirtual,
-} from "vuetify/labs/VDataTable";
+import {aliases, mdi} from 'vuetify/iconsets/mdi-svg'
+import {VDataTable, VDataTableServer, VDataTableVirtual,} from "vuetify/labs/VDataTable";
 
 const mainTheme = {
     dark: false,

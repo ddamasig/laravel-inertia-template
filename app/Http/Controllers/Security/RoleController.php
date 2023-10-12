@@ -132,4 +132,10 @@ class RoleController extends Controller
 
         return to_route('roles.show', $parameters);
     }
+
+    public function destroy(Request $request, Role $role)
+    {
+        $role->delete();
+        return redirect()->back();
+    }
 }

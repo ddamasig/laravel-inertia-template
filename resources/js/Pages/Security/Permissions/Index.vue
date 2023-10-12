@@ -48,6 +48,10 @@ const props = defineProps({
 const getTableRowActions = (row) => {
     return [
         {
+            title: 'Edit',
+            action: () => router.get(`permissions/${row.id}/edit`)
+        },
+        {
             title: 'Delete',
             action: () => deleteModal.open({
                 title: 'Confirm Deletion',
