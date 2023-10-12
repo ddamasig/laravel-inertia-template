@@ -58,10 +58,7 @@ const getTableRowActions = (row) => {
                         onError: () => alert.success('Error', `Failed to delete Permission ${row.name}`),
                         onFinish: () => deleteModal.close()
                     })
-                },
-                onCancel: (() => {
-                    console.log('onCancel()...')
-                })
+                }
             })
         }
     ]

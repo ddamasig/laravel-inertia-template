@@ -4,9 +4,6 @@ import {useConfirmModalStore} from "@/Stores/ConfirmModalStore.js";
 
 const modal = useConfirmModalStore()
 
-console.log('IsOpen:')
-console.log(modal.isOpen)
-
 </script>
 
 <template>

@@ -1,12 +1,19 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {router} from "@inertiajs/vue3";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
-import {mdiDotsVertical, mdiMagnify} from "@mdi/js";
+import {mdiMagnify} from "@mdi/js";
 import {useServerDataTable} from "@/Composables/useServerDataTable.js";
 import {useDisplayDateFormat} from "@/Composables/useDisplayDateFormat.js";
+import TableRowActionButton from "@/Components/Common/Tables/TableRowActionButton.vue";
+import {useAlertStore} from "@/Stores/AlertStore.js";
+import {useConfirmModalStore} from "@/Stores/ConfirmModalStore.js";
+
+const deleteModal = useConfirmModalStore()
+const selectedRow = ref(null)
+const alert = useAlertStore()
 
 const {
     loading,
@@ -37,6 +44,25 @@ const props = defineProps({
     breadcrumbs: Array,
     resources: Object
 })
+
+const getTableRowActions = (row) => {
+    return [
+        {
+            title: 'Delete',
+            action: () => deleteModal.open({
+                title: 'Confirm Deletion',
+                content: "Please note that by deleting this role, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
+                onConfirm: () => {
+                    router.delete(`/roles/${row.id}`, {
+                        onSuccess: () => alert.success('Deleted', `Role ${row.name} has been successfully deleted.`),
+                        onError: () => alert.success('Error', `Failed to delete Role ${row.name}`),
+                        onFinish: () => deleteModal.close()
+                    })
+                },
+            })
+        }
+    ]
+}
 
 </script>
 
@@ -71,13 +97,18 @@ const props = defineProps({
                     <template v-slot:[`item.created_at`]="{ item }">
                         {{ useDisplayDateFormat(item.created_at) }}
                     </template>
-                    <template v-slot:[`item.action`]>
-                        <v-btn :icon="mdiDotsVertical" variant="text" color="muted"/>
+                    <template v-slot:[`item.action`]="{item}">
+                        <TableRowActionButton :items="getTableRowActions(item)"/>
                     </template>
                     <template v-slot:top>
                         <v-toolbar color="transparent">
-                            <v-btn variant="flat" color="primary" min-height="42"
-                                   @click="router.get('/roles/create')">New
+                            <v-btn
+                                variant="flat"
+                                color="primary"
+                                min-height="42"
+                                @click="router.get('/roles/create')"
+                            >
+                                New
                             </v-btn>
                             <v-divider vertical class="ml-4"/>
                             <v-toolbar-title>

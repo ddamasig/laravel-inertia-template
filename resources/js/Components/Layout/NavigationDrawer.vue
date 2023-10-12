@@ -61,12 +61,11 @@ const navigate = (url) => {
         permanent
     >
         <v-list-item
-            class="py-3 "
+            class="py-12"
             prepend-avatar="/images/logo.png"
-            title="Generic App"
+            title="Prototype App"
             subtitle="Some random text here"
-        >
-        </v-list-item>
+        />
         <v-list nav :lines="false" v-model="state.activePage">
             <v-list-item
                 v-for="link in links"
