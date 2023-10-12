@@ -6,6 +6,9 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
+// Pinia
+import { createPinia } from 'pinia'
+
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -24,18 +27,14 @@ const mainTheme = {
     dark: false,
     colors: {
         background: '#FFFFFF',
-        'paper-dark': '#1c2536',
+        'paper-dark': '#233044',
         'paper-dark-text': '#979ea9',
         'muted': '#6C737F',
         surface: '#FFFFFF',
-        primary: '#6265ef',
+        primary: '#376fd0',
         'primary-darken-1': '#3700B3',
         secondary: '#03DAC6',
         'secondary-darken-1': '#018786',
-        error: '#B00020',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FB8C00',
     },
 }
 
@@ -62,6 +61,8 @@ const vuetify = createVuetify({
     },
 })
 
+const pinia = createPinia()
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -72,6 +73,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(vuetify)
+            .use(pinia)
             .mount(el);
     },
     progress: {

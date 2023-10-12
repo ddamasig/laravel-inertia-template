@@ -1,31 +1,19 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import {router, useForm} from "@inertiajs/vue3";
-import {reactive, ref} from "vue";
+import {router} from "@inertiajs/vue3";
+import {reactive} from "vue";
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
 import {mdiDotsVertical, mdiMagnify} from "@mdi/js";
 import {useServerDataTable} from "@/Composables/useServerDataTable.js";
 import {useDisplayDateFormat} from "@/Composables/useDisplayDateFormat.js";
-import TableRowActionButton from "@/Components/Common/Tables/TableRowActionButton.vue";
-import ConfirmationModal from "@/Components/Common/Modals/ConfirmationModal.vue";
-import {useConfirmDialog} from "@vueuse/core";
-import Alert from "@/Components/Common/Notifications/Alert.vue";
-import {useAlertStore} from "@/Stores/AlertStore.js";
-
-const deleteModal = useConfirmDialog()
-const selectedRow = ref(null)
-const form = useForm({
-    id: null
-})
-const alert = useAlertStore()
 
 const {
     loading,
     refetch,
     queries
 } = useServerDataTable({
-    url: '/permissions',
+    url: '/roles',
     only: ['resources'],
 })
 
@@ -50,44 +38,12 @@ const props = defineProps({
     resources: Object
 })
 
-const getTableRowActions = (row) => {
-    return [
-        {
-            title: 'Delete',
-            action: () => deleteModal.reveal(row)
-        }
-    ]
-}
-
-deleteModal.onReveal((row) => {
-    selectedRow.value = row
-})
-
-deleteModal.onConfirm(() => {
-    form.delete(`/permissions/${selectedRow.value.id}`, {
-        onSuccess: () => alert.success('Deleted', `Permission ${selectedRow.value.name} has been successfully deleted.`),
-        onError: (error) => console.error(error),
-    })
-    // router.delete(`/permissions/${selectedRow.value.id}`, {
-    //     onSuccess: () => console.log('Success!'),
-    //     onError: (error) => console.error(error),
-    // })
-})
-
 </script>
 
 <template>
     <AppLayout>
         <v-sheet>
-            <ConfirmationModal
-                v-if="deleteModal.isRevealed.value"
-                @confirm="deleteModal.confirm"
-                @cancel="deleteModal.cancel"
-                title="Confirm Deletion"
-                content="Please note that by deleting this permission, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?"
-                :data="selectedRow"
-            />
-            <PageHeader title="Permissions"/>
+            <PageHeader title="Roles"/>
             <Breadcrumbs :items="props.breadcrumbs"/>
             <v-divider class="mt-3"/>
 
@@ -107,7 +63,7 @@ deleteModal.onConfirm(() => {
                     <template v-slot:[`item.name`]="{ item }">
                     <span
                         class="text-primary font-weight-bold cursor-pointer"
-                        @click="router.get(`permissions/${item.id}`)"
+                        @click="router.get(`roles/${item.id}`)"
                     >
                         {{ item.name }}
                     </span>
@@ -115,18 +71,13 @@ deleteModal.onConfirm(() => {
                     <template v-slot:[`item.created_at`]="{ item }">
                         {{ useDisplayDateFormat(item.created_at) }}
                     </template>
-                    <template v-slot:[`item.action`]="{item}">
-                        <TableRowActionButton :items="getTableRowActions(item)"/>
+                    <template v-slot:[`item.action`]>
+                        <v-btn :icon="mdiDotsVertical" variant="text" color="muted"/>
                     </template>
                     <template v-slot:top>
                         <v-toolbar color="transparent">
-                            <v-btn
-                                variant="flat"
-                                color="primary"
-                                min-height="42"
-                                @click="router.get('/permissions/create')"
-                            >
-                                New
+                            <v-btn variant="flat" color="primary" min-height="42"
+                                   @click="router.get('/roles/create')">New
                             </v-btn>
                             <v-divider vertical class="ml-4"/>
                             <v-toolbar-title>

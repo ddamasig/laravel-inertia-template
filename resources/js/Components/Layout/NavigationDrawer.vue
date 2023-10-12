@@ -78,7 +78,9 @@ const navigate = (url) => {
                 :value="link"
             >
                 <slot name="title">
-                    <span style="font-weight: 700; color: #979ea9">
+                    <span
+                        :style="`font-weight: 700; color: ${isActivePage(link) ? 'white' : '#979ea9'}`"
+                    >
                         {{ link.text }}
                     </span>
                 </slot>

@@ -4,6 +4,7 @@ import {router} from '@inertiajs/vue3';
 import NavigationDrawer from "@/Components/Layout/NavigationDrawer.vue";
 import ApplicationBar from "@/Components/Layout/ApplicationBar.vue";
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
+import Alert from "@/Components/Common/Notifications/Alert.vue";
 
 const props = defineProps({
     title: String,
@@ -36,6 +37,11 @@ const logout = () => {
 
         <v-main>
             <v-container class="pt-0">
+                <v-row>
+                    <v-col cols="12">
+                        <Alert/>
+                    </v-col>
+                </v-row>
                 <slot/>
             </v-container>
         </v-main>

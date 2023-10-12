@@ -21,4 +21,7 @@ const navigate = (url) => {
 .v-breadcrumbs-item--disabled {
     opacity: 0.7 !important;
 }
+.v-breadcrumbs-item {
+    padding-left: 0 !important;
+}
 </style>

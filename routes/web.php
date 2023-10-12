@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Security\PermissionController;
+use App\Http\Controllers\Security\RoleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,5 +37,6 @@ Route::middleware([
         ]);
     })->name('dashboard');
 
+    Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 });
