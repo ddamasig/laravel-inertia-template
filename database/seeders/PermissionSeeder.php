@@ -79,7 +79,7 @@ class PermissionSeeder extends Seeder
             Permission::firstOrCreate([
                 'name' => $permission['name'],
                 'description' => $permission['description'],
-                'guard_name' => 'sanctum'
+                'guard_name' => 'web'
             ]);
         }
     }

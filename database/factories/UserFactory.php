@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Municipality;
+use App\Models\Province;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,11 +22,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $municipality = Municipality::inRandomOrder()->first();
         return [
-            'name' => $this->faker->name(),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'middle_name' => $this->faker->lastName(),
+            'mobile_number' => $this->faker->unique()->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'province_id' => $municipality->province_id,
+            'municipality_id' => $municipality->id,
+            'birthdate' => $this->faker->dateTimeBetween('-50 years', '18 years'),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),

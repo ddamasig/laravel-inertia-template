@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
+use App\Http\Controllers\Security\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,10 +34,10 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
         return Inertia::render('Dashboard', [
-            'users' => \App\Models\User::where('name', 'ilike', "%$request->search%")->get()
         ]);
     })->name('dashboard');
 
+    Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 });

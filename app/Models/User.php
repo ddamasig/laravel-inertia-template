@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -17,6 +18,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +26,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'birthdate',
+        'province_id',
+        'municipality_id',
+        'mobile_number',
         'email',
         'password',
     ];
@@ -57,5 +65,25 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'full_name'
     ];
+
+    protected function getDefaultGuardName(): string
+    {
+        return 'web';
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        $fn = $this->first_name;
+        $ln = $this->last_name;
+        $mn = $this->middle_name;
+        if (!$mn) {
+            return "$fn $ln";
+        }
+
+        $mi = substr($mn, 0) . '.';
+        return "$fn $mi $ln";
+    }
+
 }
