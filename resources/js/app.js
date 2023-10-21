@@ -26,6 +26,7 @@ const mainTheme = {
         'muted': '#6C737F',
         surface: '#FFFFFF',
         primary: '#376fd0',
+        'primary-lighten-1': '#eeeeee',
         'primary-darken-1': '#3700B3',
         secondary: '#03DAC6',
         'secondary-darken-1': '#018786',

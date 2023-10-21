@@ -3,28 +3,18 @@
 namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
+use App\Services\AuthService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class RoleController extends Controller
 {
-    protected function getPermissions()
-    {
-        return Permission::select([
-            'id',
-            'guard_name',
-            'name',
-            'description'
-        ])->orderBy('name', 'asc')->get();
-    }
-
     public function index(Request $request): \Inertia\Response
     {
         $itemsPerPage = $request->get('per_page', 100);
@@ -64,7 +54,7 @@ class RoleController extends Controller
             ],
         ];
 
-        $permissions = $this->getPermissions();
+        $permissions = AuthService::getPermissions();
 
         return Inertia::render('Security/Roles/Create', [
             'breadcrumbs' => $breadcrumbs,
@@ -84,7 +74,7 @@ class RoleController extends Controller
             ],
         ];
 
-        $permissions = $this->getPermissions();
+        $permissions = AuthService::getPermissions();
         $role = Role::with('permissions')->find($role->id);
 
         return Inertia::render('Security/Roles/Show', [
@@ -111,7 +101,7 @@ class RoleController extends Controller
         ];
 
         $role = Role::with('permissions')->find($role->id);
-        $permissions = $this->getPermissions();
+        $permissions = AuthService::getPermissions();
 
         return Inertia::render('Security/Roles/Edit', [
             'breadcrumbs' => $breadcrumbs,

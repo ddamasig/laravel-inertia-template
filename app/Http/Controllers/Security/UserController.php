@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\AuthService;
+use App\Services\LocationService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,16 +17,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
 {
-    protected function getUsers()
-    {
-        return User::select([
-            'id',
-            'guard_name',
-            'name',
-            'description'
-        ])->orderBy('name', 'asc')->get();
-    }
-
     public function index(Request $request): \Inertia\Response
     {
         $itemsPerPage = $request->get('per_page', 100);
@@ -70,11 +62,15 @@ class UserController extends Controller
             ],
         ];
 
-        $users = $this->getUsers();
+        $roles = AuthService::getRoles();
+        $permissions = AuthService::getPermissions();
+        $provinces = LocationService::getProvinces();
 
         return Inertia::render('Security/Users/Create', [
             'breadcrumbs' => $breadcrumbs,
-            'users' => $users
+            'permissions' => $permissions,
+            'provinces' => $provinces,
+            'roles' => $roles,
         ]);
     }
 
@@ -86,17 +82,19 @@ class UserController extends Controller
                 'href' => '/users'
             ],
             [
-                'title' => $user->name,
+                'title' => $user->getFullNameAttribute(),
             ],
         ];
 
-        $users = $this->getUsers();
+        $roles = AuthService::getRoles();
+        $permissions = AuthService::getPermissions();
         $user = User::with('users')->find($user->id);
 
         return Inertia::render('Security/Users/Show', [
             'breadcrumbs' => $breadcrumbs,
-            'users' => $users,
             'user' => $user,
+            'permissions' => $permissions,
+            'roles' => $roles,
         ]);
     }
 
@@ -117,12 +115,15 @@ class UserController extends Controller
         ];
 
         $user = User::with('users')->find($user->id);
-        $users = $this->getUsers();
+        $permissions = AuthService::getPermissions();
+        $roles = AuthService::getRoles();
+        $user = User::with('users')->find($user->id);
 
         return Inertia::render('Security/Users/Edit', [
             'breadcrumbs' => $breadcrumbs,
-            'users' => $users,
             'user' => $user,
+            'permissions' => $permissions,
+            'roles' => $roles,
         ]);
 
     }

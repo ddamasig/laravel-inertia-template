@@ -1,90 +1,116 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import {Head, useForm} from '@inertiajs/vue3';
+import {mdiEmail, mdiLock} from "@mdi/js";
+import {reactive} from "vue";
 
 defineProps({
-    canResetPassword: Boolean,
-    status: String,
+  canResetPassword: Boolean,
+  status: String,
 });
+
+const state = reactive({
+  loading: false
+})
 
 const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
+  email: '',
+  password: '',
+  remember: false,
 });
 
-const submit = () => {
-    form.transform(data => ({
-        ...data,
-        remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
+const onSubmitHandler = () => {
+  form.transform(data => ({
+    ...data,
+    remember: form.remember ? 'on' : '',
+  })).post(route('login'), {
+    onFinish: () => form.reset('password'),
+  });
 };
 </script>
 
 <template>
-    <Head title="Log in" />
+  <Head title="Log in"/>
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
+  <v-container style="height: 100vh" fluid>
+    <v-row class="fill-height" align-content="center" justify="center">
+      <v-col style="max-width: 400px">
+        <v-form @submit.prevent="onSubmitHandler" :disabled="state.loading">
+          <v-card border variant="flat">
+            <div class="bg-primary">
+              <v-list-item>
+                <template #prepend>
+                  <v-avatar image="/images/logo.png" size="72" class="pa-4"/>
+                </template>
+                <v-list-item-subtitle>
+                  Welcome to
+                </v-list-item-subtitle>
+                <v-list-item-title>
+                  <span style="font-size: 1.75rem; font-weight: bolder">Generic App</span>
+                </v-list-item-title>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
+              </v-list-item>
             </div>
+            <v-card-text class="pb-0">
+              <v-text-field
+                  v-model="form.email"
+                  label="E-mail Address"
+                  variant="outlined"
+                  density="compact"
+                  type="email"
+                  color="primary"
+                  hide-details
+                  :prepend-inner-icon="mdiEmail"
+                  @input="form.clearErrors('email')"
+                  :error="!!form.errors.email"
+                  :error-messages="form.errors.email"
+                  class="mb-4"
+              />
+              <v-text-field
+                  v-model="form.password"
+                  label="Password"
+                  variant="outlined"
+                  density="compact"
+                  type="password"
+                  color="primary"
+                  class="mb-4"
+                  hide-details
+                  :prepend-inner-icon="mdiLock"
+                  @input="form.clearErrors('password')"
+                  :error="!!form.errors.password"
+                  :error-messages="form.errors.password"
+              />
+              <v-checkbox
+                  v-model="form.remember"
+                  color="primary"
+                  label="Remember Me"
+                  hide-details
+                  density="compact"
+              />
+            </v-card-text>
+            <v-card-actions class="px-4">
+              <v-btn
+                  color="primary"
+                  variant="text"
+                  style="min-width: 100px;"
+                  :href="route('password.request')"
+              >
+                Forgot Password?
+              </v-btn>
+              <v-spacer/>
+              <v-btn
+                  color="primary"
+                  variant="flat"
+                  style="min-width: 100px;"
+                  type="submit"
+              >
+                Login
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </v-col>
+    </v-row>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+  </v-container>
 
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
-    </AuthenticationCard>
 </template>
