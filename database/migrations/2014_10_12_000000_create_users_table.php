@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('mobile_number');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('username')->unique();
             $table->string('password');
             $table->string('status', 8)->default('active');
             $table->rememberToken();
