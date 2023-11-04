@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+\Spatie\Activitylog\Models\Activity::
 return new class extends Migration {
     /**
      * Run the migrations.
@@ -28,6 +29,7 @@ return new class extends Migration {
             $table->foreignId('municipality_id')->constrained('municipalities')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
