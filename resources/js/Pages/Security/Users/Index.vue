@@ -12,7 +12,6 @@ import {useAlertStore} from "@/Stores/AlertStore.js";
 import {useConfirmModalStore} from "@/Stores/ConfirmModalStore.js";
 
 const deleteModal = useConfirmModalStore()
-const selectedRow = ref(null)
 const alert = useAlertStore()
 
 const {
@@ -96,6 +95,13 @@ const getTableRowActions = (row) => {
                         {{ item.name }}
                     </span>
                     </template>
+
+                    <template v-slot:[`item.status`]="{ item }">
+                    <span class="text-capitalize">
+                        {{ item.status }}
+                    </span>
+                    </template>
+
                     <template v-slot:[`item.created_at`]="{ item }">
                         {{ useDisplayDateFormat(item.created_at) }}
                     </template>

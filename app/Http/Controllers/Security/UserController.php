@@ -8,23 +8,27 @@ use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 use App\Services\AuthService;
 use App\Services\LocationService;
+use App\Services\LogService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
 {
+
+    protected LogService $logger;
+
     public function __construct()
     {
         $this->authorizeResource(User::class, 'user');
+        $this->logger = new LogService(Auth::user(), 'user-management');
     }
 
     public function index(Request $request): \Inertia\Response
@@ -153,6 +157,11 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
 
+            $this->logger->activity('debug', 'Failed to create user.', [
+                'exception' => $exception,
+                'input' => $request->all(),
+            ]);
+
             return redirect()->back()->withErrors([
                 'custom' => 'Failed to create user.'
             ]);
@@ -173,6 +182,12 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
 
+            $this->logger->activity('debug', 'Failed to update user.', [
+                'exception' => $exception,
+                'input' => $request->all(),
+                'user_id' => $user->id,
+            ]);
+
             return redirect()->back()->withErrors([
                 'custom' => 'Failed to update user.'
             ]);
@@ -185,7 +200,19 @@ class UserController extends Controller
 
     public function destroy(Request $request, User $user): RedirectResponse
     {
-        $user->delete();
-        return redirect()->back();
+        try {
+            $user->delete();
+            return redirect()->back();
+        } catch (\Exception $exception) {
+            $this->logger->activity('debug', 'Failed to delete user.', [
+                'exception' => $exception,
+                'input' => $request->all(),
+                'user_id' => $user->id,
+            ]);
+
+            return redirect()->back()->withErrors([
+                'custom' => 'Failed to delete user.'
+            ]);
+        }
     }
 }

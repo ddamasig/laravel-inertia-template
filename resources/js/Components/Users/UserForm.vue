@@ -181,7 +181,6 @@ const passwordModes = computed(() => {
                             @update:modelValue="onChangeProvince"
                         />
                         <SearchableSelect
-                            v-show="!!form.processing"
                             v-model="form.municipality"
                             label="Municipality *"
                             name="municipality_id"
@@ -189,6 +188,7 @@ const passwordModes = computed(() => {
                             :items="form.province?.municipalities ?? []"
                             item-title="name"
                             return-object
+                            :disabled="!form.province || disabled"
                         />
 
                         <h2 class="d-block v-card-title px-0">
@@ -204,7 +204,7 @@ const passwordModes = computed(() => {
                             return-object
                         />
 
-                        <PermissionQuickList :permissions="form.role.permissions"/>
+                        <PermissionQuickList :permissions="form.role?.permissions ?? []"/>
 
                         <h2 class="d-block v-card-title px-0">
                             Credentials
