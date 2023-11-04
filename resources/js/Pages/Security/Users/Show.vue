@@ -2,13 +2,15 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
-import RoleForm from "@/Components/Roles/RoleForm.vue";
+import UserForm from "@/Components/Users/UserForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,
-    permissions: Array,
     errorBags: Object,
-    role: Object,
+    permissions: Array,
+    user: Object,
+    roles: Array,
+    provinces: Array,
 })
 
 </script>
@@ -17,14 +19,20 @@ const props = defineProps({
     <AppLayout>
         <v-sheet style="display: flex; flex-direction: column;">
             <div style="flex-grow: 0">
-                <PageHeader title="View Role"/>
+                <PageHeader title="Edit Role"/>
                 <Breadcrumbs :items="props.breadcrumbs"/>
             </div>
             <v-divider class="mt-3"/>
 
             <v-row class="mt-4">
                 <v-col cols="12">
-                    <RoleForm :role="props.role" :disabled="true" :permissions="permissions"/>
+                    <UserForm
+                        :provinces="provinces"
+                        :roles="roles"
+                        :permissions="permissions"
+                        :user="user"
+                        disabled
+                    />
                 </v-col>
             </v-row>
         </v-sheet>

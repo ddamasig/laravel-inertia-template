@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests\Users;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
-class StoreUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,16 +18,17 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(Request $request): array
     {
+        $user = $this->route('user');
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'mobile_number' => ['required', 'string', 'max:11'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'mobile_number' => ['required', 'string', 'max:11', 'unique:users,mobile_number,' . $user->id],
             'province_id' => ['required'],
             'municipality_id' => ['required'],
             'role_id' => ['required'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,email,' . $user->id],
             'password_mode' => [
                 'required',
                 'in:temporary,manual,unchanged',

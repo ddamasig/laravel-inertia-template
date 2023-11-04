@@ -1,6 +1,6 @@
 <script setup>
-import {computed, reactive, ref} from "vue";
-import {mdiAccount, mdiImage} from "@mdi/js";
+import {computed, ref} from "vue";
+import {mdiImage} from "@mdi/js";
 import {useSingleImageUpload} from "@/Composables/useSingleImageUpload.js";
 import {useFileSize} from "@/Composables/useFileSize.js";
 
@@ -11,13 +11,18 @@ const props = defineProps({
     label: String,
     progress: String | Number,
     loading: String | Boolean,
+    default: Object,
+    disabled: String | Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const uploaderRef = ref(null)
 const {format} = useFileSize()
-const {onSelectFile, imageData, imagePreview} = useSingleImageUpload()
+const {onSelectFile, imageData, imagePreview} = useSingleImageUpload({
+    data: props.default?.data,
+    preview: props.default?.preview,
+})
 
 const value = computed({
     get() {
@@ -43,8 +48,9 @@ const title = computed({
         const data = imageData?.value
         let size = format(data?.size)
         size = size ? `, ${size}` : ''
+        const fileName = data?.file_name ?? data?.name
         if (data) {
-            return `${data.name}${size}`
+            return `${fileName}${size}`
         }
         return 'No image uploaded yet'
     },
@@ -63,7 +69,7 @@ const onTriggerUploader = () => {
 </script>
 
 <template>
-    <v-list-item class="py-7 px-0" lines="three">
+    <v-list-item class="pa-0 mb-3" lines="three" :disabled="disabled">
         <template #prepend>
             <v-avatar
                 color="grey"
@@ -108,8 +114,8 @@ const onTriggerUploader = () => {
         <v-list-item-subtitle class="py-2">
             <v-progress-linear v-if="loading" color="primary" model-value="progress ?? 0"/>
             <span v-if="errorMessage" class="text-error">
-                {{ errorMessage }}
-            </span>
+        {{ errorMessage }}
+      </span>
         </v-list-item-subtitle>
     </v-list-item>
 </template>

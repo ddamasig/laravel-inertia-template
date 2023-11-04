@@ -26,11 +26,11 @@ class AdminSeeder extends Seeder
         ]);
         $user = $user->refresh();
 
-        $user->assignRole('admin');
+        $user->assignRole('Admin');
 
         $users = User::factory(20)->create();
         foreach ($users as $u) {
-            $u->assignRole('tester');
+            $u->assignRole('Tester');
         }
     }
 }

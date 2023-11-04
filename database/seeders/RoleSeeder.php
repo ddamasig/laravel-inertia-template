@@ -16,12 +16,12 @@ class RoleSeeder extends Seeder
         $permissions = Permission::all();
         $roles = [
             [
-                'name' => 'admin',
+                'name' => 'Admin',
                 'description' => 'This user has access to all features of the system. Make sure to only give this access to either the maintainer or owner of the system.',
                 'permissions' => $permissions
             ],
             [
-                'name' => 'tester',
+                'name' => 'Tester',
                 'description' => 'This role is only used to populate the users table for testing. Feel free to customize permissions during testing.',
                 'permissions' => []
             ],

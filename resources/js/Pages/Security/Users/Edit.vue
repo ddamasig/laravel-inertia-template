@@ -2,13 +2,15 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
-import RoleForm from "@/Components/Roles/RoleForm.vue";
+import UserForm from "@/Components/Users/UserForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,
-    permissions: Array,
     errorBags: Object,
-    role: Object,
+    permissions: Array,
+    user: Object,
+    roles: Array,
+    provinces: Array,
 })
 
 </script>
@@ -24,7 +26,12 @@ const props = defineProps({
 
             <v-row class="mt-4">
                 <v-col cols="12">
-                    <RoleForm :role="props.role" :permissions="permissions"/>
+                    <UserForm
+                        :provinces="provinces"
+                        :roles="roles"
+                        :permissions="permissions"
+                        :user="user"
+                    />
                 </v-col>
             </v-row>
         </v-sheet>

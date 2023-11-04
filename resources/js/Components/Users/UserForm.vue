@@ -1,15 +1,12 @@
 <script setup>
 import {router, useForm} from "@inertiajs/vue3";
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 import {useAlertStore} from "@/Stores/AlertStore.js";
-import PermissionFormSelectorItem from "@/Components/Permissions/PermissionFormSelector/PermissionFormSelectorItem.vue";
-import {mdiMagnify} from "@mdi/js";
-import PermissionFormSelector from "@/Components/Permissions/PermissionFormSelector/PermissionFormSelector.vue";
 import TextField from "@/Components/Common/Forms/TextField.vue";
 import SearchableSelect from "@/Components/Common/Forms/SearchableSelect.vue";
-import Checkbox from "@/Components/Common/Forms/Checkbox.vue";
 import Select from "@/Components/Common/Forms/Select.vue";
 import ImageUploader from "@/Components/Common/Forms/ImageUploader.vue";
+import PermissionQuickList from "@/Components/Permissions/PermissionQuickList.vue";
 
 const alert = useAlertStore()
 const props = defineProps({
@@ -21,7 +18,7 @@ const props = defineProps({
 })
 
 const form = useForm({
-    avatar: props.user?.avatar ?? null,
+    avatar: null,
     first_name: props.user?.first_name ?? null,
     middle_name: props.user?.middle_name ?? null,
     last_name: props.user?.last_name ?? null,
@@ -33,7 +30,7 @@ const form = useForm({
     username: props.user?.username ?? null,
     password: props.user?.password ?? null,
     password_confirmation: null,
-    password_mode: 'temporary',
+    password_mode: !props.user ? 'manual' : 'unchanged',
     province: props.user?.province ?? null,
     municipality: props.user?.municipality ?? null,
 })
@@ -49,21 +46,31 @@ const onSubmitHandler = () => {
         onStart: () => {
             form.processing = true
         },
-        onError: () => {
-            alert.error('Error', `Failed to ${action} user ${form.name}.`)
+        onError: (error) => {
+            console.log('error:')
+            console.error(error)
+            alert.error('Error', `Failed to ${action} user ${form.first_name}.`)
         },
         onSuccess: () => {
-            alert.success('Success', `Successfully ${action}d user ${form.name}.`)
+            alert.success('Success', `Successfully ${action}d user ${form.first_name}.`)
         },
         onFinish: () => form.processing = false,
     }
 
     const transformFunction = (data) => ({
-        ...data,
+        first_name: form.first_name,
+        middle_name: form.middle_name,
+        last_name: form.last_name,
+        email: form.email,
+        mobile_number: form.mobile_number,
+        username: form.username,
+        password_mode: form.password_mode,
+        password: form.password,
+        password_confirmation: form.password_confirmation,
+        role_id: form.role?.id ?? null,
         province_id: form.province?.id ?? null,
         municipality_id: form.municipality?.id ?? null,
         avatar: form.avatar?.length > 0 ? form.avatar[0] : null,
-        permissions: data.permissions.map(p => p.name)
     })
 
     if (props.disabled) {
@@ -71,7 +78,7 @@ const onSubmitHandler = () => {
     }
 
     if (props.user) {
-        form.transform(transformFunction).put(`/users/${props.user.id}`, options)
+        form.transform(transformFunction).post(`/users/${props.user.id}`, options)
         return
     }
 
@@ -85,27 +92,39 @@ const onChangeProvince = () => {
     form.municipality = null
 }
 
-const passwordModes = [
-    {
-        name: 'Temporary Password',
-        value: 'temporary'
-    },
-    {
-        name: 'Set Manually',
-        value: 'manual'
-    },
-]
+const passwordModes = computed(() => {
+    const modes = [
+        {
+            name: 'Temporary Password',
+            value: 'temporary'
+        },
+        {
+            name: 'Set Manually',
+            value: 'manual'
+        },
+    ]
+
+    // If the form is on Edit mode
+    if (props.user) {
+        modes.unshift({
+            name: 'Unchanged',
+            value: 'unchanged'
+        })
+    }
+
+    return modes
+})
 </script>
 
 <template>
-    <v-form @submit.prevent="onSubmitHandler" :disabled="form.processing">
+    <v-form @submit.prevent="onSubmitHandler" :disabled="form.processing || disabled">
         <v-card elevation="0" border :loading="form.processing">
             <template v-slot:loader>
-                <v-progress-linear color="primary" indeterminate v-show="form.processing"/>
+                <v-progress-linear v-show="form.processing" color="primary" indeterminate/>
             </template>
             <v-card-text class="pt-2">
                 <v-row>
-                    <v-col cols="12" lg="6">
+                    <v-col cols="12">
                         <h2 class="d-block v-card-title px-0">
                             Basic Information
                         </h2>
@@ -114,6 +133,11 @@ const passwordModes = [
                             label="Avatar"
                             name="avatar"
                             :form="form"
+                            :default="{
+                              data: user?.avatar,
+                              preview: user?.avatar?.preview_url
+                            }"
+                            :disabled="disabled"
                         />
                         <TextField
                             v-model="form.first_name"
@@ -157,15 +181,31 @@ const passwordModes = [
                             @update:modelValue="onChangeProvince"
                         />
                         <SearchableSelect
+                            v-show="!!form.processing"
                             v-model="form.municipality"
                             label="Municipality *"
                             name="municipality_id"
                             :form="form"
                             :items="form.province?.municipalities ?? []"
                             item-title="name"
-                            :disabled="!form.province"
                             return-object
                         />
+
+                        <h2 class="d-block v-card-title px-0">
+                            Access Control
+                        </h2>
+                        <SearchableSelect
+                            v-model="form.role"
+                            label="Role *"
+                            name="role_id"
+                            :form="form"
+                            :items="roles"
+                            item-title="name"
+                            return-object
+                        />
+
+                        <PermissionQuickList :permissions="form.role.permissions"/>
+
                         <h2 class="d-block v-card-title px-0">
                             Credentials
                         </h2>
@@ -210,14 +250,7 @@ const passwordModes = [
                                 app.
                             </v-alert>
                         </template>
-                    </v-col>
-                    <v-divider vertical class="d-none d-lg-block"/>
-                    <v-col cols="12" lg="6">
-                        <PermissionFormSelector
-                            v-model="form.permissions"
-                            :permissions="permissions"
-                            :disabled="disabled"
-                        />
+
                     </v-col>
                 </v-row>
             </v-card-text>

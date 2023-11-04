@@ -25,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         Gate::before(function (User $user) {
             // Globally allow all actions for admin
-            if ($user->hasRole('admin')) {
+            if ($user->hasRole('Admin')) {
                 return true;
             }
         });

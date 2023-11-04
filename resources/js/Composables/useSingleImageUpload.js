@@ -1,8 +1,8 @@
 import {ref} from "vue";
 
-export function useSingleImageUpload() {
-    const imageData = ref(null)
-    const imagePreview = ref(null)
+export function useSingleImageUpload({data, preview}) {
+    const imageData = ref(data ?? null)
+    const imagePreview = ref(preview ?? null)
 
     /**
      * This function should be bound to a v-file-input's @change event.

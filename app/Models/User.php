@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -70,7 +72,8 @@ class User extends Authenticatable implements HasMedia
      * @var array<int, string>
      */
     protected $appends = [
-        'profile_photo_url',
+        'avatar',
+        'role',
         'full_name'
     ];
 
@@ -87,6 +90,13 @@ class User extends Authenticatable implements HasMedia
             ->nonQueued();
     }
 
+
+    public function getRoleAttribute()
+    {
+        $role = $this->roles()->with('permissions')->first();
+        return $role ?: null;
+    }
+
     public function getFullNameAttribute(): string
     {
         $fn = $this->first_name;
@@ -98,6 +108,21 @@ class User extends Authenticatable implements HasMedia
 
         $mi = substr($mn, 0) . '.';
         return "$fn $mi $ln";
+    }
+
+    public function getAvatarAttribute(): ?Media
+    {
+        return $this->getFirstMedia('avatar');
+    }
+
+    public function province(): BelongsTo
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function municipality(): BelongsTo
+    {
+        return $this->belongsTo(Municipality::class);
     }
 
 }

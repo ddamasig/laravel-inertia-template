@@ -37,7 +37,8 @@ Route::middleware([
         ]);
     })->name('dashboard');
 
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->except(['update']);
+    Route::post('users/{user}', [UserController::class, 'update']);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 });

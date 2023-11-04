@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Actions\Fortify\PasswordValidationRules;
+use App\Exceptions\MissingEmailException;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Permission\Models\Role;
 
 class UserService
 {
@@ -19,9 +23,9 @@ class UserService
         self::createModel($input);
     }
 
-    public static function createModel(array $input)
+    public static function createModel(array $input): User
     {
-        $whitelistedKeys = Arr::only($input, [
+        $input = Arr::only($input, [
             'first_name',
             'middle_name',
             'last_name',
@@ -32,7 +36,70 @@ class UserService
             'username',
             'password',
         ]);
-        return User::firstOrCreate($whitelistedKeys);
+        $user = User::firstOrCreate($input);
+
+        return $user->refresh();
+    }
+
+    /**
+     * @param User $user
+     * @param array $input
+     * @return User
+     * @throws MissingEmailException
+     */
+    public static function updateModel(User $user, array $input): User
+    {
+        $user->first_name = $input['first_name'];
+        $user->middle_name = $input['middle_name'];
+        $user->last_name = $input['last_name'];
+        $user->email = $input['email'];
+        $user->mobile_number = $input['mobile_number'];
+        $user->province_id = $input['province_id'];
+        $user->municipality_id = $input['municipality_id'];
+        $user->save();
+
+        $passwordMode = $input['password_mode'];
+        if ($passwordMode === 'manual') {
+            self::setPasswordManually($user, $input['password']);
+        } else if ($passwordMode === 'temporary') {
+            self::setTemporaryPassword($user);
+        }
+
+        return $user->refresh();
+    }
+
+    /**
+     * Updates the User's password.
+     * @param User $user
+     * @param string $password
+     * @return User
+     */
+    public static function setPasswordManually(User $user, string $password): User
+    {
+        $user->password = Hash::make($password);
+        $user->save();
+
+        return $user->refresh();
+    }
+
+    /**
+     * Sets the User's password to a random string then sends an e-mail to notify the user.
+     * @param User $user
+     * @return User
+     * @throws MissingEmailException
+     */
+    public static function setTemporaryPassword(User $user): User
+    {
+        if (!$user->email) {
+            throw new MissingEmailException('Failed to set temporary password. The user does not have an email.');
+        }
+
+        $password = rand();
+
+        $user->password = Hash::make($password);
+        $user->save();
+
+        return $user->refresh();
     }
 
     /**
@@ -41,7 +108,14 @@ class UserService
      */
     public static function uploadAvatar(User $user, UploadedFile $avatar): Media
     {
+        $user->clearMediaCollection('avatar');
         return $user->addMedia($avatar)
             ->toMediaCollection('avatar');
+    }
+
+    public static function assignRole(User $user, int $roleId): void
+    {
+        $role = Role::findOrFail($roleId);
+        $user->assignRole($role->name);
     }
 }

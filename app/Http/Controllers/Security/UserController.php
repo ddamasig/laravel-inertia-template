@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 use App\Services\AuthService;
 use App\Services\LocationService;
@@ -95,14 +96,16 @@ class UserController extends Controller
             ],
         ];
 
-        $roles = AuthService::getRoles();
+        $user = User::with(['province', 'municipality'])
+            ->find($user->id);
+        $roles = AuthService::getRoles(true);
         $permissions = AuthService::getPermissions();
-        $user = User::with('users')->find($user->id);
 
         return Inertia::render('Security/Users/Show', [
             'breadcrumbs' => $breadcrumbs,
             'user' => $user,
             'permissions' => $permissions,
+            'provinces' => LocationService::getProvinces(),
             'roles' => $roles,
         ]);
     }
@@ -115,7 +118,7 @@ class UserController extends Controller
                 'href' => '/users'
             ],
             [
-                'title' => $user->name,
+                'title' => $user->getFullNameAttribute(),
                 'href' => "/users/$user->id"
             ],
             [
@@ -123,18 +126,18 @@ class UserController extends Controller
             ],
         ];
 
-        $user = User::with('users')->find($user->id);
+        $user = User::with(['province', 'municipality'])
+            ->find($user->id);
+        $roles = AuthService::getRoles(true);
         $permissions = AuthService::getPermissions();
-        $roles = AuthService::getRoles();
-        $user = User::with('users')->find($user->id);
 
         return Inertia::render('Security/Users/Edit', [
             'breadcrumbs' => $breadcrumbs,
             'user' => $user,
             'permissions' => $permissions,
+            'provinces' => LocationService::getProvinces(),
             'roles' => $roles,
         ]);
-
     }
 
     public function store(StoreUserRequest $request): RedirectResponse
@@ -142,6 +145,7 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $user = UserService::createModel($request->all());
+            UserService::assignRole($user, $request->role_id);
             if ($request->avatar) {
                 UserService::uploadAvatar($user, $request->avatar);
             }
@@ -156,26 +160,22 @@ class UserController extends Controller
         return to_route('users.index');
     }
 
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $input = $request->validate([
-            'name' => "required|max:512|unique:users,name,$user->id",
-            'description' => 'required|max:1024',
-            'users' => 'required|array',
-            'users.*' => 'required|exists:users,name',
-        ]);
-
         DB::beginTransaction();
         try {
-            $user->nam = $input['name'];
-            $user->description = $input['description'];
-            $user->save();
-
-            $user->syncUsers($input['users']);
+            $user = UserService::updateModel($user, $request->all());
+            UserService::assignRole($user, $request->role_id);
+            if ($request->avatar) {
+                UserService::uploadAvatar($user, $request->avatar);
+            }
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-            throw $exception;
+
+            return redirect()->back()->withErrors([
+                'custom' => 'Failed to update user.'
+            ]);
         }
 
         return to_route('users.show', [
