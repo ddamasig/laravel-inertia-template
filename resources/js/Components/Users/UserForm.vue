@@ -47,8 +47,6 @@ const onSubmitHandler = () => {
             form.processing = true
         },
         onError: (error) => {
-            console.log('error:')
-            console.error(error)
             alert.error('Error', `Failed to ${action} user ${form.first_name}.`)
         },
         onSuccess: () => {

@@ -11,11 +11,6 @@ const items = [
         method: 'GET'
     },
     {
-        title: 'Settings',
-        link: '/settings',
-        method: 'GET'
-    },
-    {
         title: 'Logout',
         link: '/logout',
         method: 'POST'
@@ -44,7 +39,7 @@ const user = computed(() => page.props.auth.user)
             />
         </template>
 
-        <v-list>
+        <v-list density="compact">
             <v-list-item class="border-b pb-3">
                 <v-list-item-title class="font-weight-bold">{{ user.full_name }}</v-list-item-title>
                 <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>

@@ -19,7 +19,7 @@ const props = defineProps({
     <AppLayout>
         <v-sheet style="display: flex; flex-direction: column;">
             <div style="flex-grow: 0">
-                <PageHeader title="Edit Role"/>
+                <PageHeader title="Edit User"/>
                 <Breadcrumbs :items="props.breadcrumbs"/>
             </div>
             <v-divider class="mt-3"/>

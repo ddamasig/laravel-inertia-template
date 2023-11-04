@@ -23,6 +23,12 @@ export const useAlertStore = defineStore('alert', () => {
         unshift(title, content, 'error')
     }
 
+    function handleError(error) {
+        if (error?.custom) {
+            unshift('Error', error?.custom, 'error')
+        }
+    }
+
     function info(title, content) {
         unshift(title, content, 'info')
     }
@@ -41,6 +47,7 @@ export const useAlertStore = defineStore('alert', () => {
         unshift,
         success,
         error,
+        handleError,
         info,
         clear,
     }
