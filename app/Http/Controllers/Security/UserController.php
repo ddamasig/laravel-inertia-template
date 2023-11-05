@@ -182,6 +182,7 @@ class UserController extends Controller
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            dd($exception->getMessage());
 
             $this->logger->activity('debug', 'Failed to update user.', [
                 'exception' => $exception,

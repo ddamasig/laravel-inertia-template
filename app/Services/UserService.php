@@ -4,10 +4,14 @@ namespace App\Services;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Exceptions\MissingEmailException;
+use App\Models\PasswordResetToken;
 use App\Models\User;
+use App\Notifications\TemporaryPasswordNotification;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -62,7 +66,7 @@ class UserService
         if ($passwordMode === 'manual') {
             self::setPasswordManually($user, $input['password']);
         } else if ($passwordMode === 'temporary') {
-            self::setTemporaryPassword($user);
+            self::sendResetPasswordLink($user);
         }
 
         return $user->refresh();
@@ -88,18 +92,15 @@ class UserService
      * @return User
      * @throws MissingEmailException
      */
-    public static function setTemporaryPassword(User $user): User
+    public static function sendResetPasswordLink(User $user): User
     {
         if (!$user->email) {
             throw new MissingEmailException('Failed to set temporary password. The user does not have an email.');
         }
 
-        $password = rand();
+        Password::sendResetLink(['email' => $user->email]);
 
-        $user->password = Hash::make($password);
-        $user->save();
-
-        return $user->refresh();
+        return $user;
     }
 
     /**

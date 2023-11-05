@@ -2,29 +2,29 @@
 
 namespace App\Notifications;
 
-use App\Models\ELoadingTransaction;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Env;
-use Illuminate\Support\HtmlString;
 
 class TemporaryPasswordNotification extends Notification implements ShouldQueue, ShouldBroadcast
 {
     use Queueable;
 
+    protected string $email;
+    protected string $token;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($email, $token)
     {
+        $this->email = $email;
+        $this->token = $token;
     }
 
     public function via($notifiable)
@@ -39,7 +39,11 @@ class TemporaryPasswordNotification extends Notification implements ShouldQueue,
      */
     public function toMail($notifiable): MailMessage
     {
-        $url = Env::get('APP_URL') . '/password-reset';
+        dd([
+            'email' => $this->email,
+            'token' => $this->token,
+        ]);
+        $url = Env::get('APP_URL') . '/reset-password/' . $this->passwordResetToken->token;
         $firstName = $notifiable->first_name;
         return (new MailMessage())
             ->subject('Temporary Password Notification')

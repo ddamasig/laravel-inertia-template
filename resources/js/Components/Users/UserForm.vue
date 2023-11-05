@@ -48,6 +48,7 @@ const onSubmitHandler = () => {
         },
         onError: (error) => {
             alert.error('Error', `Failed to ${action} user ${form.first_name}.`)
+            alert.handleError(error)
         },
         onSuccess: () => {
             alert.success('Success', `Successfully ${action}d user ${form.first_name}.`)
