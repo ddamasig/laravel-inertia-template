@@ -21,7 +21,7 @@ const value = computed({
 
 const errorMessage = computed({
   get() {
-    const errors = props.form.errors[props.name]
+    const errors = props.form?.errors[props.name]
     if (errors) {
       return errors
     }

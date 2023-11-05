@@ -47,6 +47,7 @@ class UserController extends Controller
                     $query->where('first_name', 'ilike', "%$value%")
                         ->orWhere('last_name', 'ilike', "%$value%");
                 }),
+                'status'
             ])
             ->allowedSorts([
                 AllowedSort::field('full_name', 'first_name'),

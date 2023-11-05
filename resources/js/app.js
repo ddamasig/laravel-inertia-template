@@ -69,12 +69,12 @@ createInertiaApp({
         const app = createApp({render: () => h(App, props)});
 
         // Sentry
-        Sentry.init({
-            app,
-            dsn: import.meta.env.VITE_SENTRY_DSN_PUBLIC,
-            tracesSampleRate: 1.0,
-            logErrors: true,
-        });
+        // Sentry.init({
+        //     app,
+        //     dsn: import.meta.env.VITE_SENTRY_DSN_PUBLIC,
+        //     tracesSampleRate: 1.0,
+        //     logErrors: true,
+        // });
 
         app.use(plugin)
             .use(ZiggyVue)

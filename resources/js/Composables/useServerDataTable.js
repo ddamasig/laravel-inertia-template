@@ -18,6 +18,15 @@ export function useServerDataTable({url, only, filters, paginated}) {
 
         const params = {...queries}
 
+        // Remove parameters with IGNORE value
+        const keys = Object.keys(params)
+        for (const key of keys) {
+            if (params[key] === 'IGNORE') {
+                delete params[key]
+            }
+        }
+
+
         if (queries.sort.length > 0) {
             const order = params.sort[0]
             const direction = order.order === 'desc' ? '-' : ''

@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {router} from "@inertiajs/vue3";
-import {reactive, ref} from "vue";
+import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
 import {mdiMagnify} from "@mdi/js";
@@ -10,6 +10,7 @@ import {useDisplayDateFormat} from "@/Composables/useDisplayDateFormat.js";
 import TableRowActionButton from "@/Components/Common/Tables/TableRowActionButton.vue";
 import {useAlertStore} from "@/Stores/AlertStore.js";
 import {useConfirmModalStore} from "@/Stores/ConfirmModalStore.js";
+import Select from "@/Components/Common/Forms/Select.vue";
 
 const deleteModal = useConfirmModalStore()
 const alert = useAlertStore()
@@ -65,6 +66,21 @@ const getTableRowActions = (row) => {
     ]
 }
 
+const statusOptions = [{
+    text: 'Show All',
+    value: 'IGNORE'
+}, {
+    text: 'Show Active Only',
+    value: 'active'
+}, {
+    text: 'Show Inactive Only',
+    value: 'inactive'
+}]
+
+// Set default filters
+onBeforeMount(() => {
+    queries['filter[status]'] = statusOptions[0].value
+})
 </script>
 
 <template>
@@ -87,12 +103,56 @@ const getTableRowActions = (row) => {
                     item-value="id"
                     :loading="loading"
                 >
-                    <template v-slot:[`item.name`]="{ item }">
+                    <template v-slot:top>
+                        <v-toolbar color="transparent">
+                            <v-btn
+                                variant="flat"
+                                color="primary"
+                                min-height="42"
+                                @click="router.get('/users/create')"
+                            >
+                                New
+                            </v-btn>
+                            <v-divider vertical class="ml-4"/>
+                            <v-toolbar-title>
+                                <v-row>
+                                    <v-col>
+                                        <v-text-field
+                                            v-model="queries['filter[search]']"
+                                            @keydown.enter="refetch"
+                                            label="Type your keywords then press Enter"
+                                            variant="outlined"
+                                            color="primary"
+                                            single-line
+                                            :prepend-inner-icon="mdiMagnify"
+                                            density="compact"
+                                            hide-details
+                                            style="flex-grow: 6"
+                                        />
+                                    </v-col>
+                                    <v-col lg="3">
+                                        <Select
+                                            v-model="queries['filter[status]']"
+                                            :items="statusOptions"
+                                            label="Status"
+                                            density="compact"
+                                            hide-details
+                                            item-value="value"
+                                            item-title="text"
+                                            single-line
+                                        />
+                                    </v-col>
+                                </v-row>
+                            </v-toolbar-title>
+                        </v-toolbar>
+                    </template>
+
+                    <template v-slot:[`item.full_name`]="{ item }">
                     <span
                         class="text-primary font-weight-bold cursor-pointer"
                         @click="router.get(`users/${item.id}`)"
                     >
-                        {{ item.name }}
+                        {{ item.full_name }}
                     </span>
                     </template>
 
@@ -107,32 +167,6 @@ const getTableRowActions = (row) => {
                     </template>
                     <template v-slot:[`item.action`]="{item}">
                         <TableRowActionButton :items="getTableRowActions(item)"/>
-                    </template>
-                    <template v-slot:top>
-                        <v-toolbar color="transparent">
-                            <v-btn
-                                variant="flat"
-                                color="primary"
-                                min-height="42"
-                                @click="router.get('/users/create')"
-                            >
-                                New
-                            </v-btn>
-                            <v-divider vertical class="ml-4"/>
-                            <v-toolbar-title>
-                                <v-text-field
-                                    v-model="queries['filter[search]']"
-                                    @keydown.enter="refetch"
-                                    label="Type your keywords then press Enter"
-                                    variant="outlined"
-                                    color="primary"
-                                    single-line
-                                    :prepend-inner-icon="mdiMagnify"
-                                    density="compact"
-                                    hide-details
-                                />
-                            </v-toolbar-title>
-                        </v-toolbar>
                     </template>
                 </v-data-table-server>
             </v-sheet>
