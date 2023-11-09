@@ -7,12 +7,14 @@ use App\Exceptions\MissingEmailException;
 use App\Models\PasswordResetToken;
 use App\Models\User;
 use App\Notifications\TemporaryPasswordNotification;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Inertia\Testing\Concerns\Has;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -29,7 +31,7 @@ class UserService
 
     public static function createModel(array $input): User
     {
-        $input = Arr::only($input, [
+        $payload = Arr::only($input, [
             'first_name',
             'middle_name',
             'last_name',
@@ -40,7 +42,22 @@ class UserService
             'username',
             'password',
         ]);
-        $user = User::firstOrCreate($input);
+
+        if (!$payload['password']) {
+            $payload['password'] = Hash::make(rand());
+        }
+        $user = User::firstOrCreate($payload);
+
+        $passwordMode = $input['password_mode'];
+        if ($passwordMode === 'manual') {
+            self::setPasswordManually($user, $input['password']);
+        } else if ($passwordMode === 'temporary') {
+            self::sendResetPasswordLink($user);
+        }
+
+        // Send a verification email to the new user
+        event(new Registered($user));
+
 
         return $user->refresh();
     }
@@ -60,6 +77,7 @@ class UserService
         $user->mobile_number = $input['mobile_number'];
         $user->province_id = $input['province_id'];
         $user->municipality_id = $input['municipality_id'];
+        $user->status = $input['status'];
         $user->save();
 
         $passwordMode = $input['password_mode'];

@@ -5,7 +5,6 @@ import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
-import * as Sentry from "@sentry/vue";
 
 // Pinia
 import {createPinia} from 'pinia'
@@ -27,10 +26,12 @@ const mainTheme = {
         'muted': '#6C737F',
         surface: '#FFFFFF',
         primary: '#376fd0',
+        'primary-faded': '#e9efff',
         'primary-lighten-1': '#eeeeee',
         'primary-darken-1': '#3700B3',
         secondary: '#03DAC6',
         'secondary-darken-1': '#018786',
+        'error': '#ad3636',
     },
 }
 

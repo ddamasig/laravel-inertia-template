@@ -1,7 +1,9 @@
 <script setup>
-import {Head, useForm} from '@inertiajs/vue3';
+import {Head, useForm, usePage} from '@inertiajs/vue3';
 import {mdiEmail, mdiLock} from "@mdi/js";
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
+
+const page = usePage();
 
 defineProps({
     canResetPassword: Boolean,
@@ -30,15 +32,29 @@ const onSubmitHandler = () => {
         }
     });
 };
+
+const customErrorMessage = computed(() => {
+  let message = page.props?.errors?.custom
+  return message ?? null;
+})
+
 </script>
 
 <template>
     <Head title="Log in"/>
 
-    <v-container style="height: 100vh" fluid>
+    <v-container style="height: 100vh" fluid class="bg-primary-faded">
         <v-row class="fill-height" align-content="center" justify="center">
             <v-col style="max-width: 400px">
                 <v-form @submit.prevent="onSubmitHandler" :disabled="state.loading">
+                  <v-alert
+                      v-if="customErrorMessage"
+                      title="Failed to Login"
+                      :text="customErrorMessage"
+                      type="error"
+                      class="mb-2"
+                      variant="flat"
+                  />
                     <v-card border variant="flat">
                         <div class="bg-primary">
                             <v-list-item>
@@ -107,6 +123,7 @@ const onSubmitHandler = () => {
                                 style="min-width: 100px;"
                                 type="submit"
                                 :loading="state.loading"
+                                :disabled="!form.isDirty"
                             >
                                 Login
                             </v-btn>

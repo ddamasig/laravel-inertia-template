@@ -28,6 +28,7 @@ class UpdateUserRequest extends FormRequest
             'province_id' => ['required'],
             'municipality_id' => ['required'],
             'role_id' => ['required'],
+            'status' => ['required'],
             'username' => ['required', 'string', 'max:255', 'unique:users,email,' . $user->id],
             'password_mode' => [
                 'required',

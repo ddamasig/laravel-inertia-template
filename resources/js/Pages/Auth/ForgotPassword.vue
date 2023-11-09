@@ -6,6 +6,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import {mdiEmail, mdiLock} from "@mdi/js";
 
 defineProps({
     status: String,
@@ -16,46 +17,55 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.email'));
+    form.post(route('password.email'), {
+        onFinish: () => {
+            form.reset()
+        }
+    });
 };
 </script>
 
 <template>
     <Head title="Forgot Password" />
+    <v-container style="height: 100vh" fluid class="bg-primary-faded">
+        <v-row class="fill-height" align-content="center" justify="center">
+            <v-col style="max-width: 400px">
+                <v-form @submit.prevent="submit" :disabled="form.processing">
+                    <v-card border variant="flat">
+                        <v-card-title>
+                            Forgot your password?
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
+                            <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                                {{ status }}
+                            </div>
+                        </v-card-title>
+                        <v-card-text class="pb-0">
+                            <p class="mb-4">
+                                No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+                            </p>
+                            <v-text-field
+                                v-model="form.email"
+                                label="E-mail Address"
+                                variant="outlined"
+                                density="compact"
+                                type="email"
+                                color="primary"
+                                :prepend-inner-icon="mdiEmail"
+                                :error="!!form.errors.email"
+                                :error-messages="form.errors.email"
+                                class="mb-4"
+                            />
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer/>
+                            <v-btn color="primary" type="submit" variant="flat" :loading="form.processing">
+                                Submit
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-form>
+            </v-col>
+        </v-row>
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-        </div>
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </PrimaryButton>
-            </div>
-        </form>
-    </AuthenticationCard>
+    </v-container>
 </template>

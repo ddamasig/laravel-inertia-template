@@ -7,6 +7,7 @@ import SearchableSelect from "@/Components/Common/Forms/SearchableSelect.vue";
 import Select from "@/Components/Common/Forms/Select.vue";
 import ImageUploader from "@/Components/Common/Forms/ImageUploader.vue";
 import PermissionQuickList from "@/Components/Permissions/PermissionQuickList.vue";
+import SwitchField from "@/Components/Common/Forms/SwitchField.vue";
 
 const alert = useAlertStore()
 const props = defineProps({
@@ -67,6 +68,7 @@ const onSubmitHandler = () => {
         password: form.password,
         password_confirmation: form.password_confirmation,
         role_id: form.role?.id ?? null,
+        status: form.status ?? null,
         province_id: form.province?.id ?? null,
         municipality_id: form.municipality?.id ?? null,
         avatar: form.avatar?.length > 0 ? form.avatar[0] : null,
@@ -112,6 +114,21 @@ const passwordModes = computed(() => {
     }
 
     return modes
+})
+
+const statusOptions = [
+    {
+        name: 'Active',
+        value: 'active'
+    },
+    {
+        name: 'Inactive',
+        value: 'inactive'
+    },
+]
+
+const onEditMode = computed(() => {
+    return !!props.user?.id
 })
 </script>
 
@@ -193,6 +210,17 @@ const passwordModes = computed(() => {
                         <h2 class="d-block v-card-title px-0">
                             Access Control
                         </h2>
+
+                        <Select
+                                v-if="onEditMode"
+                            v-model="form.status"
+                            label="Status *"
+                            name="status"
+                            :form="form"
+                            :items="statusOptions"
+                            item-title="name"
+                        />
+
                         <SearchableSelect
                             v-model="form.role"
                             label="Role *"
