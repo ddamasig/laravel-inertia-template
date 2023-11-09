@@ -23,7 +23,9 @@
     "dependencies": {
         "@vueuse/core": "^10.5.0",
         "debounce": "^1.2.1",
+        "laravel-echo": "^1.15.3",
         "pinia": "^2.1.6",
+        "pusher-js": "^8.3.0",
         "vuetify": "^3.3.20"
     }
 }

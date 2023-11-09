@@ -6,7 +6,7 @@ use App\Actions\Fortify\PasswordValidationRules;
 use App\Exceptions\MissingEmailException;
 use App\Models\PasswordResetToken;
 use App\Models\User;
-use App\Notifications\TemporaryPasswordNotification;
+use App\Notifications\AccountDisabledNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -77,8 +77,14 @@ class UserService
         $user->mobile_number = $input['mobile_number'];
         $user->province_id = $input['province_id'];
         $user->municipality_id = $input['municipality_id'];
-        $user->status = $input['status'];
         $user->save();
+
+        $status = $input['status'];
+        if ($status === 'active') {
+            self::activateUser($user);
+        } else if ($status === 'inactive') {
+            self::deactivateUser($user);
+        }
 
         $passwordMode = $input['password_mode'];
         if ($passwordMode === 'manual') {
@@ -136,5 +142,19 @@ class UserService
     {
         $role = Role::findOrFail($roleId);
         $user->assignRole($role->name);
+    }
+
+    public static function activateUser(User $user): void
+    {
+        $user->status = 'active';
+        $user->save();
+    }
+
+    public static function deactivateUser(User $user): void
+    {
+        $user->status = 'inactive';
+        $user->save();
+
+        $user->notifyNow(new AccountDisabledNotification());
     }
 }

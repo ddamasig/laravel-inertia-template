@@ -61,6 +61,7 @@ const vuetify = createVuetify({
 const pinia = createPinia()
 
 
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
