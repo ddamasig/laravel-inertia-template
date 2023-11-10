@@ -32,6 +32,7 @@ const mainTheme = {
         secondary: '#03DAC6',
         'secondary-darken-1': '#018786',
         'error': '#ad3636',
+        'success': '#4aad36',
     },
 }
 

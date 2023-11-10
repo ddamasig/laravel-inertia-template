@@ -4,17 +4,13 @@ namespace App\Services;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Exceptions\MissingEmailException;
-use App\Models\PasswordResetToken;
 use App\Models\User;
 use App\Notifications\AccountDisabledNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Inertia\Testing\Concerns\Has;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -57,7 +53,6 @@ class UserService
 
         // Send a verification email to the new user
         event(new Registered($user));
-
 
         return $user->refresh();
     }
