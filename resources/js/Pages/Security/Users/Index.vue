@@ -15,6 +15,17 @@ import Select from "@/Components/Common/Forms/Select.vue";
 const deleteModal = useConfirmModalStore()
 const alert = useAlertStore()
 
+const statusOptions = [{
+    text: 'Show All',
+    value: 'IGNORE'
+}, {
+    text: 'Show Active Only',
+    value: 'active'
+}, {
+    text: 'Show Inactive Only',
+    value: 'inactive'
+}]
+
 const {
     loading,
     refetch,
@@ -22,6 +33,9 @@ const {
 } = useServerDataTable({
     url: '/users',
     only: ['resources'],
+    filters: {
+        'filter[status]': statusOptions[0].value
+    }
 })
 
 const state = reactive({
@@ -65,22 +79,6 @@ const getTableRowActions = (row) => {
         },
     ]
 }
-
-const statusOptions = [{
-    text: 'Show All',
-    value: 'IGNORE'
-}, {
-    text: 'Show Active Only',
-    value: 'active'
-}, {
-    text: 'Show Inactive Only',
-    value: 'inactive'
-}]
-
-// Set default filters
-onBeforeMount(() => {
-    queries['filter[status]'] = statusOptions[0].value
-})
 </script>
 
 <template>

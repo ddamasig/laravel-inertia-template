@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
             'first_name' => 'Dean Simon',
             'middle_name' => null,
             'last_name' => 'Damasig',
+            'username' => 'ddamasig',
             'birthdate' => Carbon::now()->subYears(24),
             'mobile_number' => '09451339125',
             'email' => 'ddamasig@gmail.com',

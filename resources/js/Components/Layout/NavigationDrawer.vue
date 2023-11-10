@@ -8,43 +8,51 @@ import {
 } from "@mdi/js";
 import {router} from "@inertiajs/vue3";
 import {reactive} from "vue";
+import {useAuth} from "@/Composables/useAuth.js";
 
 const state = reactive({
     activePage: '/'
 });
 
+const {canEither} = useAuth()
 const links = [
     {
         text: 'Dashboard',
         group: 'dashboard',
         icon: mdiMonitorDashboard,
-        link: '/dashboard'
+        link: '/dashboard',
+        permissions: ['list:dashboards'],
     },
     {
         text: 'Users',
         icon: mdiAccountMultiple,
         group: 'users',
-        link: '/users'
+        link: '/users',
+        permissions: ['list:users'],
     },
     {
         text: 'Roles',
         group: 'roles',
         icon: mdiHardHat,
-        link: '/roles'
+        link: '/roles',
+        permissions: ['list:roles'],
     },
     {
         text: 'Permissions',
         group: 'permissions',
         icon: mdiPoliceBadge,
-        link: '/permissions'
+        link: '/permissions',
+        permissions: ['list:permissions'],
     },
     {
         text: 'Access Logs',
         group: 'access-logs',
         icon: mdiSecurity,
-        link: '/access-logs'
+        link: '/access-logs',
+        permissions: ['list:logs'],
     },
 ]
+const allowedLinks = links.filter(link => canEither(link.permissions))
 
 const isActivePage = (link) => {
     return route().current().startsWith(link.group)
@@ -53,6 +61,8 @@ const isActivePage = (link) => {
 const navigate = (url) => {
     router.visit(url)
 }
+
+
 </script>
 
 <template>
@@ -60,15 +70,10 @@ const navigate = (url) => {
         color="paper-dark"
         permanent
     >
-        <v-list-item
-            class="py-12"
-            prepend-avatar="/images/logo.png"
-            title="Prototype App"
-            subtitle="Some random text here"
-        />
+        <v-img src="/images/logo.png" max-width="200"/>
         <v-list nav :lines="false" v-model="state.activePage">
             <v-list-item
-                v-for="link in links"
+                v-for="link in allowedLinks"
                 :key="link.link"
                 :prepend-icon="link.icon"
                 @click="navigate(link.link)"
@@ -86,6 +91,6 @@ const navigate = (url) => {
             </v-list-item>
         </v-list>
 
-<!--        <template v-slot:append></template>-->
+        <!--        <template v-slot:append></template>-->
     </v-navigation-drawer>
 </template>

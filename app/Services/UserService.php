@@ -74,6 +74,7 @@ class UserService
         $user->middle_name = $input['middle_name'];
         $user->last_name = $input['last_name'];
         $user->email = $input['email'];
+        $user->username = $input['username'];
         $user->mobile_number = $input['mobile_number'];
         $user->province_id = $input['province_id'];
         $user->municipality_id = $input['municipality_id'];
@@ -155,6 +156,6 @@ class UserService
         $user->status = 'inactive';
         $user->save();
 
-        $user->notifyNow(new AccountDisabledNotification());
+        $user->notify(new AccountDisabledNotification());
     }
 }

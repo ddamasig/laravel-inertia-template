@@ -25,7 +25,7 @@ class UserFactory extends Factory
         $municipality = Municipality::inRandomOrder()->first();
         $firstName = $this->faker->firstName();
         $lastName = $this->faker->lastName();
-        $username = "$firstName[0]$lastName";
+        $username = strtolower("$firstName[0]$lastName");
         return [
             'first_name' => $firstName,
             'last_name' => $lastName,
