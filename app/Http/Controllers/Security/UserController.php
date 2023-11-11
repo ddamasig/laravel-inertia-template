@@ -147,17 +147,9 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        DB::beginTransaction();
         try {
-            $user = UserService::createModel($request->all());
-            UserService::assignRole($user, $request->role_id);
-            if ($request->avatar) {
-                UserService::uploadAvatar($user, $request->avatar);
-            }
-            DB::commit();
+            UserService::create($request->all());
         } catch (\Exception $exception) {
-            DB::rollBack();
-
             $this->logger->activity('debug', 'Failed to create user.', [
                 'exception' => $exception,
                 'input' => $request->all(),

@@ -9,6 +9,7 @@ use App\Notifications\AccountDisabledNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
@@ -20,9 +21,27 @@ class UserService
 {
     use PasswordValidationRules;
 
-    public static function create(array $input)
+    /**
+     * This function handles the object creation, avatar upload and notifications for creating a new user.
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public static function create(array $input): User
     {
-        self::createModel($input);
+        DB::beginTransaction();
+        try {
+            $user = self::createModel($input);
+            self::assignRole($user, $input['role_id']);
+            if ($input['avatar']) {
+                self::uploadAvatar($user, $input['avatar']);
+            }
+            DB::commit();
+
+            return $user;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 
     public static function createModel(array $input): User
