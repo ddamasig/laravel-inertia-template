@@ -40,7 +40,6 @@ const onInput = () => {
       v-model="value"
       @input="onInput"
       :label="props.label"
-      variant="outlined"
       density="compact"
       color="primary"
       :error="!!errorMessage"

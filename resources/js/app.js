@@ -20,19 +20,15 @@ import {VDataTable, VDataTableServer, VDataTableVirtual,} from "vuetify/labs/VDa
 const mainTheme = {
     dark: false,
     colors: {
-        background: '#FFFFFF',
-        'paper-dark': '#233044',
+        background: '#f4f2ee',
+        'paper-dark': '#FFF',
+        // 'paper-dark': '#233044',
         'paper-dark-text': '#979ea9',
         'muted': '#6C737F',
         surface: '#FFFFFF',
-        primary: '#376fd0',
-        'primary-faded': '#e9efff',
-        'primary-lighten-1': '#eeeeee',
-        'primary-darken-1': '#3700B3',
-        secondary: '#03DAC6',
-        'secondary-darken-1': '#018786',
-        'error': '#ad3636',
-        'success': '#4aad36',
+        // primary: '#376fd0',
+        primary: '#0a66c2',
+        'primary-faded': '#f4f2ee',
     },
 }
 

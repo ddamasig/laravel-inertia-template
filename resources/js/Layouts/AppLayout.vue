@@ -8,44 +8,45 @@ import Alert from "@/Components/Common/Notifications/Alert.vue";
 import ConfirmationModal from "@/Components/Common/Modals/ConfirmationModal.vue";
 
 const props = defineProps({
-    title: String,
+  title: String,
+  isFluid: Boolean
 });
 
 const switchToTeam = (team) => {
-    router.put(route('current-team.update'), {
-        team_id: team.id,
-    }, {
-        preserveState: false,
-    });
+  router.put(route('current-team.update'), {
+    team_id: team.id,
+  }, {
+    preserveState: false,
+  });
 };
 
 const state = reactive({showNavigationDrawer: true})
 
 const onToggleNavigationDrawerHandler = () => {
-    state.showNavigationDrawer = !state.showNavigationDrawer
+  state.showNavigationDrawer = !state.showNavigationDrawer
 }
 
 const logout = () => {
-    router.post(route('logout'));
+  router.post(route('logout'));
 };
 </script>
 
 <template>
-    <v-layout class="rounded rounded-md">
-        <NavigationDrawer v-model="state.showNavigationDrawer"/>
+  <v-layout class="rounded rounded-md">
+    <NavigationDrawer v-model="state.showNavigationDrawer"/>
 
-        <ApplicationBar :on-toggle-navigation-drawer="onToggleNavigationDrawerHandler"/>
+    <ApplicationBar :on-toggle-navigation-drawer="onToggleNavigationDrawerHandler"/>
 
-        <v-main>
-            <v-container class="pt-0">
-                <v-row>
-                    <v-col cols="12">
-                        <Alert/>
-                        <ConfirmationModal/>
-                    </v-col>
-                </v-row>
-                <slot/>
-            </v-container>
-        </v-main>
-    </v-layout>
+    <v-main>
+      <v-container class="pt-0" :fluid="props.isFluid">
+        <v-row>
+          <v-col cols="12">
+            <Alert/>
+            <ConfirmationModal/>
+          </v-col>
+        </v-row>
+        <slot/>
+      </v-container>
+    </v-main>
+  </v-layout>
 </template>

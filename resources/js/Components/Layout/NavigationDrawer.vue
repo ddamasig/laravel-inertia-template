@@ -4,7 +4,7 @@ import {
     mdiAccountMultiple,
     mdiHardHat,
     mdiSecurity,
-    mdiPoliceBadge
+    mdiPoliceBadge, mdiOfficeBuilding
 } from "@mdi/js";
 import {router} from "@inertiajs/vue3";
 import {reactive} from "vue";
@@ -22,6 +22,13 @@ const links = [
         icon: mdiMonitorDashboard,
         link: '/dashboard',
         permissions: ['list:dashboards'],
+    },
+    {
+        text: 'Tenants',
+        icon: mdiOfficeBuilding,
+        group: 'tenants',
+        link: '/tenants',
+        permissions: ['list:tenants'],
     },
     {
         text: 'Users',
@@ -83,7 +90,7 @@ const navigate = (url) => {
             >
                 <slot name="title">
                     <span
-                        :style="`font-weight: 700; color: ${isActivePage(link) ? 'white' : '#979ea9'}`"
+                        :style="`font-weight: 700; color: ${isActivePage(link) ? '#0a66c2' : '#979ea9'}`"
                     >
                         {{ link.text }}
                     </span>

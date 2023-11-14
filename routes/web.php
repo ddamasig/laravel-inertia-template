@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
+use App\Http\Controllers\Security\TenantController;
 use App\Http\Controllers\Security\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,7 @@ Route::middleware([
 
     Route::resource('users', UserController::class)->except(['update']);
     Route::post('users/{user}', [UserController::class, 'update']);
+    Route::resource('tenants', TenantController::class)->except(['update']);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 });

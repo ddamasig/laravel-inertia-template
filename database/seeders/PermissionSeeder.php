@@ -14,6 +14,31 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            // Tenants
+            [
+                'description' => 'List Tenants',
+                'name' => 'list:tenants',
+            ],
+            [
+                'description' => 'View Tenants',
+                'name' => 'view:tenants',
+            ],
+            [
+                'description' => 'Create Tenants',
+                'name' => 'create:tenants',
+            ],
+            [
+                'description' => 'Update Tenants',
+                'name' => 'update:tenants',
+            ],
+            [
+                'description' => 'Activate Tenants',
+                'name' => 'activate:tenants',
+            ],
+            [
+                'description' => 'Deactivate Tenants',
+                'name' => 'deactivate:tenants',
+            ],
             // Users
             [
                 'description' => 'List Users',

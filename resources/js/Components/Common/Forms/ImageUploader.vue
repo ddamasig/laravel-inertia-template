@@ -81,7 +81,7 @@ const onTriggerUploader = () => {
             </v-avatar>
         </template>
         <v-list-item-title>
-            <span class="font-weight-bold">Avatar</span>
+            <span class="font-weight-bold">{{ label }}</span>
             | {{ title }}
         </v-list-item-title>
         <v-list-item-title>
