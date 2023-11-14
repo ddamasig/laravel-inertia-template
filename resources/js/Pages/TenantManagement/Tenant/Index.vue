@@ -95,12 +95,8 @@ const getTableRowActions = (row) => {
 </script>
 
 <template>
-    <AppLayout>
+    <AppLayout title="Manage Tenants" :breadcrumbs="breadcrumbs">
         <v-sheet>
-            <PageHeader title="Manage Tenants"/>
-            <Breadcrumbs :items="props.breadcrumbs"/>
-            <v-divider class="mt-3"/>
-
             <v-sheet elevation="0" border class="pa-4 mt-8">
                 <v-data-table-server
                     fixed-header

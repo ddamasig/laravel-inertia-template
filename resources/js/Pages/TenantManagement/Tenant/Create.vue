@@ -11,56 +11,49 @@ import TenantServiceSettings from "@/Components/Tenant/TenantServiceSettings.vue
 import TenantBrandingForm from "@/Components/Tenant/TenantBrandingForm.vue";
 
 const props = defineProps({
-  breadcrumbs: Array,
-  permissions: Array,
-  provinces: Array,
-  roles: Array,
+    breadcrumbs: Array,
+    permissions: Array,
+    provinces: Array,
+    roles: Array,
 })
 
 </script>
 
 <template>
-  <AppLayout>
-    <v-sheet style="display: flex; flex-direction: column;" >
+    <AppLayout title="Create Tenant" :breadcrumbs="breadcrumbs">
+        <v-sheet style="display: flex; flex-direction: column;">
 
-      <div style="flex-grow: 0">
-        <PageHeader title="Create Tenant"/>
-        <Breadcrumbs :items="props.breadcrumbs"/>
-      </div>
+            <v-row class="mt-4 border-b">
+                <v-col cols="12" class="pb-12">
+                    <TenantBasicInformationForm
+                        :disabled="props.disabled"
+                    />
+                </v-col>
+            </v-row>
 
-      <v-divider class="mt-3"/>
+            <v-row class="mt-4 border-b">
+                <v-col cols="12" class="pb-12">
+                    <TenantConfigurationForm
+                        :disabled="props.disabled"
+                    />
+                </v-col>
+            </v-row>
 
-      <v-row class="mt-4 border-b">
-        <v-col cols="12" class="pb-12">
-          <TenantBasicInformationForm
-              :disabled="props.disabled"
-          />
-        </v-col>
-      </v-row>
+            <v-row class="mt-4 border-b">
+                <v-col cols="12" class="pb-12">
+                    <TenantServiceSettings
+                        :disabled="props.disabled"
+                    />
+                </v-col>
+            </v-row>
 
-      <v-row class="mt-4 border-b">
-        <v-col cols="12" class="pb-12">
-          <TenantConfigurationForm
-              :disabled="props.disabled"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row class="mt-4 border-b">
-        <v-col cols="12" class="pb-12">
-          <TenantServiceSettings
-              :disabled="props.disabled"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row class="mt-4 border-b">
-        <v-col cols="12" class="pb-12">
-          <TenantBrandingForm
-              :disabled="props.disabled"
-          />
-        </v-col>
-      </v-row>
-    </v-sheet>
-  </AppLayout>
+            <v-row class="mt-4 border-b">
+                <v-col cols="12" class="pb-12">
+                    <TenantBrandingForm
+                        :disabled="props.disabled"
+                    />
+                </v-col>
+            </v-row>
+        </v-sheet>
+    </AppLayout>
 </template>

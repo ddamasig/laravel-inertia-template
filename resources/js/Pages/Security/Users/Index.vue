@@ -1,9 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {router} from "@inertiajs/vue3";
-import {onBeforeMount, onMounted, reactive, ref} from "vue";
-import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
-import PageHeader from "@/Components/Layout/PageHeader.vue";
+import {reactive} from "vue";
 import {mdiMagnify} from "@mdi/js";
 import {useServerDataTable} from "@/Composables/useServerDataTable.js";
 import {useDisplayDateFormat} from "@/Composables/useDisplayDateFormat.js";
@@ -82,92 +80,86 @@ const getTableRowActions = (row) => {
 </script>
 
 <template>
-    <AppLayout>
-        <v-sheet>
-            <PageHeader title="Users"/>
-            <Breadcrumbs :items="props.breadcrumbs"/>
-            <v-divider class="mt-3"/>
+    <AppLayout title="Manage Users" :breadcrumbs="breadcrumbs">
+        <v-sheet elevation="0" border class="pa-4 mt-8">
+            <v-data-table-server
+                fixed-header
+                v-model:items-per-page="queries.per_page"
+                v-model:page="queries.page"
+                v-model:sort-by="queries.sort"
+                :items-length="props.resources.total"
+                :headers="state.headers"
+                :items="props.resources.data ?? []"
+                class="elevation-0"
+                item-value="id"
+                :loading="loading"
+            >
+                <template v-slot:top>
+                    <v-toolbar color="transparent">
+                        <v-btn
+                            variant="flat"
+                            color="primary"
+                            min-height="42"
+                            @click="router.get('/users/create')"
+                        >
+                            New
+                        </v-btn>
+                        <v-divider vertical class="ml-4"/>
+                        <v-toolbar-title>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field
+                                        v-model="queries['filter[search]']"
+                                        @keydown.enter="refetch"
+                                        label="Type your keywords then press Enter"
+                                        variant="outlined"
+                                        color="primary"
+                                        single-line
+                                        :prepend-inner-icon="mdiMagnify"
+                                        density="compact"
+                                        hide-details
+                                        style="flex-grow: 6"
+                                    />
+                                </v-col>
+                                <v-col lg="3">
+                                    <Select
+                                        v-model="queries['filter[status]']"
+                                        :items="statusOptions"
+                                        label="Status"
+                                        density="compact"
+                                        hide-details
+                                        item-value="value"
+                                        item-title="text"
+                                        single-line
+                                    />
+                                </v-col>
+                            </v-row>
+                        </v-toolbar-title>
+                    </v-toolbar>
+                </template>
 
-            <v-sheet elevation="0" border class="pa-4 mt-8">
-                <v-data-table-server
-                    fixed-header
-                    v-model:items-per-page="queries.per_page"
-                    v-model:page="queries.page"
-                    v-model:sort-by="queries.sort"
-                    :items-length="props.resources.total"
-                    :headers="state.headers"
-                    :items="props.resources.data ?? []"
-                    class="elevation-0"
-                    item-value="id"
-                    :loading="loading"
-                >
-                    <template v-slot:top>
-                        <v-toolbar color="transparent">
-                            <v-btn
-                                variant="flat"
-                                color="primary"
-                                min-height="42"
-                                @click="router.get('/users/create')"
-                            >
-                                New
-                            </v-btn>
-                            <v-divider vertical class="ml-4"/>
-                            <v-toolbar-title>
-                                <v-row>
-                                    <v-col>
-                                        <v-text-field
-                                            v-model="queries['filter[search]']"
-                                            @keydown.enter="refetch"
-                                            label="Type your keywords then press Enter"
-                                            variant="outlined"
-                                            color="primary"
-                                            single-line
-                                            :prepend-inner-icon="mdiMagnify"
-                                            density="compact"
-                                            hide-details
-                                            style="flex-grow: 6"
-                                        />
-                                    </v-col>
-                                    <v-col lg="3">
-                                        <Select
-                                            v-model="queries['filter[status]']"
-                                            :items="statusOptions"
-                                            label="Status"
-                                            density="compact"
-                                            hide-details
-                                            item-value="value"
-                                            item-title="text"
-                                            single-line
-                                        />
-                                    </v-col>
-                                </v-row>
-                            </v-toolbar-title>
-                        </v-toolbar>
-                    </template>
-
-                    <template v-slot:[`item.full_name`]="{ item }">
+                <template v-slot:[`item.full_name`]="{ item }">
                     <span
                         class="text-primary font-weight-bold cursor-pointer"
                         @click="router.get(`users/${item.id}`)"
                     >
                         {{ item.full_name }}
                     </span>
-                    </template>
+                </template>
 
-                    <template v-slot:[`item.status`]="{ item }">
+                <template v-slot:[`item.status`]="{ item }">
                     <span class="text-capitalize">
                         {{ item.status }}
                     </span>
-                    </template>
+                </template>
 
-                    <template v-slot:[`item.created_at`]="{ item }">
-                        {{ useDisplayDateFormat(item.created_at) }}
-                    </template>
-                    <template v-slot:[`item.action`]="{item}">
-                        <TableRowActionButton :items="getTableRowActions(item)"/>
-                    </template>
-                </v-data-table-server>
-            </v-sheet>
+                <template v-slot:[`item.created_at`]="{ item }">
+                    {{ useDisplayDateFormat(item.created_at) }}
+                </template>
+                <template v-slot:[`item.action`]="{item}">
+                    <TableRowActionButton :items="getTableRowActions(item)"/>
+                </template>
+            </v-data-table-server>
         </v-sheet>
     </AppLayout>
 </template>
