@@ -4,25 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Multitenancy\Models\Concerns\UsesLandlordConnection;
 
-class Tenant extends BaseModel
-//class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
+class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
 {
     use Notifiable;
     use InteractsWithMedia;
-//    use UsesLandlordConnection;
+
+    use UsesLandlordConnection;
+
+    protected $table = 'custom_tenants';
 
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
     protected $fillable = [
         'name',
+        'domain',
         'logo_url',
         'market_plan',
         'has_account_levels',
@@ -44,18 +50,30 @@ class Tenant extends BaseModel
         'contact_person',
         'mobile_number',
         'additional_address_information',
+        'province_id',
+        'municipality_id',
     ];
 
-//    protected static function booted()
-//    {
-//        static::creating(fn(Tenant $model) => $model->createDatabase());
-//    }
+    protected static function booted(): void
+    {
+        static::creating(fn(Tenant $model) => $model->createDatabase());
+    }
 
-//    public function createDatabase()
-//    {
-//        // add logic to create database
-//        DB::raw('CREATE DATABASE ' . $this->name);
-//    }
+    public function createDatabase()
+    {
+        // add logic to create database
+        try {
+            $database = DB::statement('CREATE DATABASE mt_' . $this->domain);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+        }
+    }
+
+    public function getDatabaseName(): string
+    {
+        return 'mt_' . $this->domain;
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {

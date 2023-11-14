@@ -19,12 +19,13 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    return redirect('/login');
+});
+
+Route::get('/errors', function (\Illuminate\Http\Request $request) {
+    return Inertia::render('Error', [
+        'status' => $request->status
     ]);
 });
 
@@ -43,4 +44,10 @@ Route::middleware([
     Route::resource('tenants', TenantController::class)->except(['update']);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+
+    Route::middleware('tenant')->group(function() {
+        Route::get('/tenant-page', function () {
+            return 123;
+        });
+    });
 });

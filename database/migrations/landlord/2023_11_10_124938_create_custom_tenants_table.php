@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenants', function (Blueprint $table) {
+        Schema::create('custom_tenants', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('domain')->unique();
             $table->string('logo_url')->nullable();
             $table->string('status')->default('active');
             // Settings
@@ -50,6 +51,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenants');
+        Schema::dropIfExists('custom_tenants');
     }
 };
