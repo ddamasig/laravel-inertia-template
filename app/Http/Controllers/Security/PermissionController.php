@@ -34,7 +34,7 @@ class PermissionController extends Controller
             ->orderBy('name', 'asc')
             ->paginate($itemsPerPage);
 
-        return Inertia::render('Security/Permissions/Index', [
+        return Inertia::render('Management/Security/Permissions/Index', [
             'breadcrumbs' => $breadcrumbs,
             'resources' => $resources
         ]);
@@ -52,7 +52,7 @@ class PermissionController extends Controller
             ],
         ];
 
-        return Inertia::render('Security/Permissions/Create', [
+        return Inertia::render('Management/Security/Permissions/Create', [
             'breadcrumbs' => $breadcrumbs,
         ]);
     }
@@ -69,7 +69,7 @@ class PermissionController extends Controller
             ],
         ];
 
-        return Inertia::render('Security/Permissions/Show', [
+        return Inertia::render('Management/Security/Permissions/Show', [
             'breadcrumbs' => $breadcrumbs,
             'permission' => $permission,
         ]);
@@ -105,7 +105,7 @@ class PermissionController extends Controller
             ],
         ];
 
-        return Inertia::render('Security/Permissions/Edit', [
+        return Inertia::render('Management/Security/Permissions/Edit', [
             'breadcrumbs' => $breadcrumbs,
             'permission' => $permission,
         ]);

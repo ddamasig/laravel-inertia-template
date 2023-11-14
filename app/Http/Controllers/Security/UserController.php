@@ -59,7 +59,7 @@ class UserController extends Controller
             ->orderBy('first_name', 'asc')
             ->paginate($itemsPerPage);
 
-        return Inertia::render('Security/Users/Index', [
+        return Inertia::render('Management/Security/Users/Index', [
             'breadcrumbs' => $breadcrumbs,
             'resources' => $resources
         ]);
@@ -81,7 +81,7 @@ class UserController extends Controller
         $permissions = AuthService::getPermissions();
         $provinces = LocationService::getProvinces();
 
-        return Inertia::render('Security/Users/Create', [
+        return Inertia::render('Management/Security/Users/Create', [
             'breadcrumbs' => $breadcrumbs,
             'permissions' => $permissions,
             'provinces' => $provinces,
@@ -106,7 +106,7 @@ class UserController extends Controller
         $roles = AuthService::getRoles(true);
         $permissions = AuthService::getPermissions();
 
-        return Inertia::render('Security/Users/Show', [
+        return Inertia::render('Management/Security/Users/Show', [
             'breadcrumbs' => $breadcrumbs,
             'user' => $user,
             'permissions' => $permissions,
@@ -136,7 +136,7 @@ class UserController extends Controller
         $roles = AuthService::getRoles(true);
         $permissions = AuthService::getPermissions();
 
-        return Inertia::render('Security/Users/Edit', [
+        return Inertia::render('Management/Security/Users/Edit', [
             'breadcrumbs' => $breadcrumbs,
             'user' => $user,
             'permissions' => $permissions,

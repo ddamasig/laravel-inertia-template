@@ -54,7 +54,7 @@ class TenantController extends Controller
             ->orderBy('first_name', 'asc')
             ->paginate($itemsPerPage);
 
-        return Inertia::render('TenantManagement/Tenant/Index', [
+        return Inertia::render('Management/Tenant/Index', [
             'breadcrumbs' => $breadcrumbs,
             'resources' => $resources
         ]);
@@ -76,7 +76,7 @@ class TenantController extends Controller
         $permissions = AuthService::getPermissions();
         $provinces = LocationService::getProvinces();
 
-        return Inertia::render('TenantManagement/Tenant/Create', [
+        return Inertia::render('Management/Tenant/Create', [
             'breadcrumbs' => $breadcrumbs,
             'permissions' => $permissions,
             'provinces' => $provinces,
@@ -101,7 +101,7 @@ class TenantController extends Controller
 //        $roles = AuthService::getRoles(true);
 //        $permissions = AuthService::getPermissions();
 //
-//        return Inertia::render('Security/Users/Show', [
+//        return Inertia::render('Management/Security/Users/Show', [
 //            'breadcrumbs' => $breadcrumbs,
 //            'user' => $user,
 //            'permissions' => $permissions,
@@ -131,7 +131,7 @@ class TenantController extends Controller
 //        $roles = AuthService::getRoles(true);
 //        $permissions = AuthService::getPermissions();
 //
-//        return Inertia::render('Security/Users/Edit', [
+//        return Inertia::render('Management/Security/Users/Edit', [
 //            'breadcrumbs' => $breadcrumbs,
 //            'user' => $user,
 //            'permissions' => $permissions,

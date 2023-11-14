@@ -36,7 +36,7 @@ class RoleController extends Controller
             ->orderBy('name', 'asc')
             ->paginate($itemsPerPage);
 
-        return Inertia::render('Security/Roles/Index', [
+        return Inertia::render('Management/Security/Roles/Index', [
             'breadcrumbs' => $breadcrumbs,
             'resources' => $resources
         ]);
@@ -56,7 +56,7 @@ class RoleController extends Controller
 
         $permissions = AuthService::getPermissions();
 
-        return Inertia::render('Security/Roles/Create', [
+        return Inertia::render('Management/Security/Roles/Create', [
             'breadcrumbs' => $breadcrumbs,
             'permissions' => $permissions
         ]);
@@ -77,7 +77,7 @@ class RoleController extends Controller
         $permissions = AuthService::getPermissions();
         $role = Role::with('permissions')->find($role->id);
 
-        return Inertia::render('Security/Roles/Show', [
+        return Inertia::render('Management/Security/Roles/Show', [
             'breadcrumbs' => $breadcrumbs,
             'permissions' => $permissions,
             'role' => $role,
@@ -103,7 +103,7 @@ class RoleController extends Controller
         $role = Role::with('permissions')->find($role->id);
         $permissions = AuthService::getPermissions();
 
-        return Inertia::render('Security/Roles/Edit', [
+        return Inertia::render('Management/Security/Roles/Edit', [
             'breadcrumbs' => $breadcrumbs,
             'permissions' => $permissions,
             'role' => $role,
