@@ -172,18 +172,21 @@ watch(form, () => {
                 name="logo"
                 :form="form"
                 :default="{
-                              data: user?.logo,
-                              preview: user?.logo?.preview_url
-                            }"
+                  data: user?.logo,
+                  preview: user?.logo?.preview_url
+                }"
                 :disabled="disabled"
             />
 
             <v-row>
               <v-col cols="12" md="6">
                 <h3>Brand Colors</h3>
-                <v-list-item class="pt-2" v-for="color in ['color_primary', 'color_success', 'color_error', 'color_info', 'color_warning']" :key="color">
+                <v-list-item
+                    class="pt-2"
+                    v-for="color in ['color_primary', 'color_success', 'color_error', 'color_info', 'color_warning']"
+                    :key="color">
                   <template #prepend>
-                    <v-avatar :color="form[color]" class="mt-3" rounded></v-avatar>
+                    <v-avatar :color="form[color] ?? '#F0F0F0'" class="mt-3" rounded></v-avatar>
                   </template>
                   <template #title>
                     <TextField
