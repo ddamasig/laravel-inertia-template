@@ -39,11 +39,11 @@ const onSubmitHandler = () => {
     }
 
     if (props.permission) {
-        form.put(`/permissions/${props.permission.id}`, options)
+        form.put(`/management/permissions/${props.permission.id}`, options)
         return
     }
 
-    form.post('/permissions', options)
+    form.post('/management/permissions/', options)
 }
 </script>
 
@@ -94,7 +94,7 @@ const onSubmitHandler = () => {
                     color="primary"
                     min-width="120px"
                     :loading="state.loading"
-                    @click="router.get(`/permissions/${permission.id}/edit`)"
+                    @click="router.get(`/management/permissions//${permission.id}/edit`)"
                 >
                     Edit
                 </v-btn>

@@ -25,6 +25,10 @@ class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
+    // Market Plans
+    const MARKET_PLAN_BINARY = 'binary';
+    const MARKET_PLAN_TRADITIONAL = 'tranditional';
+
     protected $fillable = [
         'name',
         'domain',

@@ -79,7 +79,7 @@ const onSubmitHandler = () => {
     }
 
     if (props.user) {
-        form.transform(transformFunction).post(`/users/${props.user.id}`, options)
+        form.transform(transformFunction).post(`/management/users/${props.user.id}`, options)
         return
     }
 
@@ -290,7 +290,7 @@ const onEditMode = computed(() => {
                     color="primary"
                     min-width="120px"
                     :loading="form.processing"
-                    @click="router.get(`/users/${user.id}/edit`)"
+                    @click="router.get(`/management/users/${user.id}/edit`)"
                 >
                     Edit
                 </v-btn>

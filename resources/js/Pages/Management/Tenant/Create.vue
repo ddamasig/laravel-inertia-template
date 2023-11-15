@@ -67,7 +67,7 @@ const onSubmitHandler = () => {
   }
 
   if (props.user) {
-    form.transform(transformFunction).post(`/users/${props.user.id}`, options)
+    form.transform(transformFunction).post(`/management/users/${props.user.id}`, options)
     return
   }
 

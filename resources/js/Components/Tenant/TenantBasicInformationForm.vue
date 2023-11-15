@@ -14,7 +14,7 @@ const props = defineProps({
  * Clear the form.municipality if the province is updated.
  */
 const onChangeProvince = () => {
-  form.municipality = null
+  props.form.municipality = null
 }
 
 </script>

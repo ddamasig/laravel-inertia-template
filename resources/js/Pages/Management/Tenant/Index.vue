@@ -16,179 +16,180 @@ const deleteModal = useConfirmModalStore()
 const alert = useAlertStore()
 
 const marketTypeOptions = [{
-    text: 'Show All',
-    value: 'IGNORE'
+  text: 'Show All',
+  value: 'IGNORE'
 }, {
-    text: 'Binary',
-    value: 'binary'
+  text: 'Binary',
+  value: 'binary'
 }, {
-    text: 'Traditional',
-    value: 'traditional'
+  text: 'Traditional',
+  value: 'traditional'
 }]
 
 const statusOptions = [{
-    text: 'Show All',
-    value: 'IGNORE'
+  text: 'Show All',
+  value: 'IGNORE'
 }, {
-    text: 'Show Active Only',
-    value: 'active'
+  text: 'Show Active Only',
+  value: 'active'
 }, {
-    text: 'Show Inactive Only',
-    value: 'inactive'
+  text: 'Show Inactive Only',
+  value: 'inactive'
 }]
 
 const {
-    loading,
-    refetch,
-    queries
+  loading,
+  refetch,
+  queries
 } = useServerDataTable({
-    url: '/tenants',
-    only: ['resources'],
-    filters: {
-        'filter[status]': statusOptions[0].value
-    }
+  url: '/tenants',
+  only: ['resources'],
+  filters: {
+    'filter[status]': statusOptions[0].value
+  }
 })
 
 const state = reactive({
-    headers: [
-        {title: 'Name', key: 'name', align: 'start'},
-        {title: 'Market Type', key: 'market_type', align: 'start'},
-        {title: 'Contact Person', key: 'contact_person', align: 'start'},
-        {title: 'E-mail', key: 'email', align: 'start'},
-        {title: 'Mobile Number', key: 'mobile_number', align: 'start'},
-        {title: 'Status', key: 'status', align: 'start'},
-        {title: 'Date Added', key: 'created_at', align: 'start'},
-        {title: '', key: 'action', align: 'end', sortable: false},
-    ],
-    filters: {
-        search: ''
-    }
+  headers: [
+    {title: 'Name', key: 'name', align: 'start'},
+    {title: 'Domain', key: 'domain', align: 'start'},
+    {title: 'Market Plan', key: 'market_plan', align: 'start'},
+    {title: 'Contact Person', key: 'contact_person', align: 'start'},
+    {title: 'E-mail', key: 'email', align: 'start'},
+    {title: 'Mobile Number', key: 'mobile_number', align: 'start'},
+    {title: 'Status', key: 'status', align: 'start'},
+    {title: 'Date Added', key: 'created_at', align: 'start'},
+    {title: '', key: 'action', align: 'end', sortable: false},
+  ],
+  filters: {
+    search: ''
+  }
 })
 
 const props = defineProps({
-    breadcrumbs: Array,
-    resources: Object,
+  breadcrumbs: Array,
+  resources: Object,
 })
 
 const getTableRowActions = (row) => {
-    return [
-        {
-            title: 'Edit',
-            action: () => router.get(`users/${row.id}/edit`)
+  return [
+    {
+      title: 'Edit',
+      action: () => router.get(`/management/users/${row.id}/edit`)
+    },
+    {
+      title: 'Delete',
+      action: () => deleteModal.open({
+        title: 'Confirm Deletion',
+        content: "Please note that by deleting this user, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
+        onConfirm: () => {
+          router.delete(`/management/users/${row.id}`, {
+            onSuccess: () => alert.success('Deleted', `User ${row.name} has been successfully deleted.`),
+            onError: () => alert.success('Error', `Failed to delete User ${row.name}`),
+            onFinish: () => deleteModal.close()
+          })
         },
-        {
-            title: 'Delete',
-            action: () => deleteModal.open({
-                title: 'Confirm Deletion',
-                content: "Please note that by deleting this user, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
-                onConfirm: () => {
-                    router.delete(`/users/${row.id}`, {
-                        onSuccess: () => alert.success('Deleted', `User ${row.name} has been successfully deleted.`),
-                        onError: () => alert.success('Error', `Failed to delete User ${row.name}`),
-                        onFinish: () => deleteModal.close()
-                    })
-                },
-            })
-        },
-    ]
+      })
+    },
+  ]
 }
 </script>
 
 <template>
-    <AppLayout title="Manage Tenants" :breadcrumbs="breadcrumbs">
-        <v-sheet>
-            <v-sheet elevation="0" border class="pa-4 mt-8">
-                <v-data-table-server
-                    fixed-header
-                    v-model:items-per-page="queries.per_page"
-                    v-model:page="queries.page"
-                    v-model:sort-by="queries.sort"
-                    :items-length="props.resources.total"
-                    :headers="state.headers"
-                    :items="props.resources.data ?? []"
-                    class="elevation-0"
-                    item-value="id"
-                    :loading="loading"
-                >
-                    <template v-slot:top>
-                        <v-toolbar color="transparent">
-                            <v-btn
-                                variant="flat"
-                                color="primary"
-                                min-height="42"
-                                @click="router.get('/tenants/create')"
-                            >
-                                New
-                            </v-btn>
-                            <v-divider vertical class="ml-4"/>
-                            <v-toolbar-title>
-                                <v-row>
-                                    <v-col>
-                                        <v-text-field
-                                            v-model="queries['filter[search]']"
-                                            @keydown.enter="refetch"
-                                            label="Type your keywords then press Enter"
-                                            variant="outlined"
-                                            color="primary"
-                                            single-line
-                                            :prepend-inner-icon="mdiMagnify"
-                                            density="compact"
-                                            hide-details
-                                            style="flex-grow: 6"
-                                        />
-                                    </v-col>
-                                    <v-col lg="3">
-                                        <Select
-                                            v-model="queries['filter[market_type]']"
-                                            :items="marketTypeOptions"
-                                            label="Market Type"
-                                            density="compact"
-                                            hide-details
-                                            item-value="value"
-                                            item-title="text"
-                                            single-line
-                                        />
-                                    </v-col>
-                                    <v-col lg="3">
-                                        <Select
-                                            v-model="queries['filter[status]']"
-                                            :items="statusOptions"
-                                            label="Status"
-                                            density="compact"
-                                            hide-details
-                                            item-value="value"
-                                            item-title="text"
-                                            single-line
-                                        />
-                                    </v-col>
-                                </v-row>
-                            </v-toolbar-title>
-                        </v-toolbar>
-                    </template>
+  <AppLayout title="Manage Tenants" :breadcrumbs="breadcrumbs">
+    <v-sheet>
+      <v-sheet elevation="0" border class="pa-4 mt-8">
+        <v-data-table-server
+            fixed-header
+            v-model:items-per-page="queries.per_page"
+            v-model:page="queries.page"
+            v-model:sort-by="queries.sort"
+            :items-length="props.resources.total"
+            :headers="state.headers"
+            :items="props.resources.data ?? []"
+            class="elevation-0"
+            item-value="id"
+            :loading="loading"
+        >
+          <template v-slot:top>
+            <v-toolbar color="transparent">
+              <v-btn
+                  variant="flat"
+                  color="primary"
+                  min-height="42"
+                  @click="router.get('/management/tenants/create')"
+              >
+                New
+              </v-btn>
+              <v-divider vertical class="ml-4"/>
+              <v-toolbar-title>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                        v-model="queries['filter[search]']"
+                        @keydown.enter="refetch"
+                        label="Type your keywords then press Enter"
+                        variant="outlined"
+                        color="primary"
+                        single-line
+                        :prepend-inner-icon="mdiMagnify"
+                        density="compact"
+                        hide-details
+                        style="flex-grow: 6"
+                    />
+                  </v-col>
+                  <v-col lg="3">
+                    <Select
+                        v-model="queries['filter[market_type]']"
+                        :items="marketTypeOptions"
+                        label="Market Type"
+                        density="compact"
+                        hide-details
+                        item-value="value"
+                        item-title="text"
+                        single-line
+                    />
+                  </v-col>
+                  <v-col lg="3">
+                    <Select
+                        v-model="queries['filter[status]']"
+                        :items="statusOptions"
+                        label="Status"
+                        density="compact"
+                        hide-details
+                        item-value="value"
+                        item-title="text"
+                        single-line
+                    />
+                  </v-col>
+                </v-row>
+              </v-toolbar-title>
+            </v-toolbar>
+          </template>
 
-                    <template v-slot:[`item.full_name`]="{ item }">
+          <template v-slot:[`item.name`]="{ item }">
                     <span
                         class="text-primary font-weight-bold cursor-pointer"
-                        @click="router.get(`users/${item.id}`)"
+                        @click="router.get(`/management/tenants/${item.id}`)"
                     >
-                        {{ item.full_name }}
+                        {{ item.name }}
                     </span>
-                    </template>
+          </template>
 
-                    <template v-slot:[`item.status`]="{ item }">
+          <template v-slot:[`item.status`]="{ item }">
                     <span class="text-capitalize">
                         {{ item.status }}
                     </span>
-                    </template>
+          </template>
 
-                    <template v-slot:[`item.created_at`]="{ item }">
-                        {{ useDisplayDateFormat(item.created_at) }}
-                    </template>
-                    <template v-slot:[`item.action`]="{item}">
-                        <TableRowActionButton :items="getTableRowActions(item)"/>
-                    </template>
-                </v-data-table-server>
-            </v-sheet>
-        </v-sheet>
-    </AppLayout>
+          <template v-slot:[`item.created_at`]="{ item }">
+            {{ useDisplayDateFormat(item.created_at) }}
+          </template>
+          <template v-slot:[`item.action`]="{item}">
+            <TableRowActionButton :items="getTableRowActions(item)"/>
+          </template>
+        </v-data-table-server>
+      </v-sheet>
+    </v-sheet>
+  </AppLayout>
 </template>

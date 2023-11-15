@@ -4,7 +4,6 @@ use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\TenantController;
 use App\Http\Controllers\Security\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,13 +18,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function (\Illuminate\Http\Request $request) {
-    return redirect('/login');
-});
-
-Route::get('/errors', function (\Illuminate\Http\Request $request) {
-    return Inertia::render('Error', [
-        'status' => $request->status
+Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
+    return Inertia::render('Dashboard', [
     ]);
-});
+})->name('dashboard');
 
+Route::resource('users', UserController::class)->except(['update']);
+Route::post('users/{user}', [UserController::class, 'update']);
+Route::resource('tenants', TenantController::class)->except(['update']);
+Route::post('tenants/{tenant}', [TenantController::class, 'update']);
+Route::resource('roles', RoleController::class);
+Route::resource('permissions', PermissionController::class);

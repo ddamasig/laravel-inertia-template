@@ -79,15 +79,14 @@ watch(props.form, () => {
                 elevation="0"
                 class="mt-2"
                 :disabled="!state.focused_color"
-
             />
           </v-sheet>
         </v-menu>
       </template>
       <template #title>
         <TextField
-            :model-value="form[color]"
-            :label="`${color.replace('_', ' ').toUpperCase()}`"
+            v-model="form[color]"
+            :label="`${color.replace('_', ' ').toUpperCase()} *`"
             name="color_primary"
             class="mt-3"
             :form="form"

@@ -18,7 +18,7 @@ const {
     refetch,
     queries
 } = useServerDataTable({
-    url: '/permissions',
+    url: '/management/permissions/',
     only: ['resources'],
 })
 
@@ -55,7 +55,7 @@ const getTableRowActions = (row) => {
                 title: 'Confirm Deletion',
                 content: "Please note that by deleting this permission, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
                 onConfirm: () => {
-                    router.delete(`/permissions/${row.id}`, {
+                    router.delete(`/management/permissions//${row.id}`, {
                         onSuccess: () => alert.success('Deleted', `Permission ${row.name} has been successfully deleted.`),
                         onError: () => alert.success('Error', `Failed to delete Permission ${row.name}`),
                         onFinish: () => deleteModal.close()
@@ -103,7 +103,7 @@ const getTableRowActions = (row) => {
                             variant="flat"
                             color="primary"
                             min-height="42"
-                            @click="router.get('/permissions/create')"
+                            @click="router.get('/management/permissions/create')"
                         >
                             New
                         </v-btn>

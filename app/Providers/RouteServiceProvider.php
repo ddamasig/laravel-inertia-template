@@ -36,5 +36,26 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        $this->mapManagementRoutes();
+    }
+
+    /**
+     * Define the Management routes of the application.
+     *
+     *
+     * @return void
+     */
+    protected function mapManagementRoutes()
+    {
+        Route::prefix('management')
+            ->middleware([
+                'web',
+                'auth:sanctum',
+                config('jetstream.auth_session'),
+                'verified',
+            ])
+            ->namespace($this->namespace) // leave it as is
+            ->group(base_path('routes/management.php'));
     }
 }

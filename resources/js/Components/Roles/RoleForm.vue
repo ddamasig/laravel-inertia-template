@@ -49,11 +49,11 @@ const onSubmitHandler = () => {
     }
 
     if (props.role) {
-        form.transform(transformFunction).put(`/roles/${props.role.id}`, options)
+        form.transform(transformFunction).put(`/management/roles/${props.role.id}`, options)
         return
     }
 
-    form.transform(transformFunction).post('/roles', options)
+    form.transform(transformFunction).post('/management/roles/', options)
 }
 </script>
 
@@ -116,7 +116,7 @@ const onSubmitHandler = () => {
                     color="primary"
                     min-width="120px"
                     :loading="form.processing"
-                    @click="router.get(`/roles/${role.id}/edit`)"
+                    @click="router.get(`/management/roles/${role.id}/edit`)"
                 >
                     Edit
                 </v-btn>

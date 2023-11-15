@@ -18,7 +18,7 @@ const {
     refetch,
     queries
 } = useServerDataTable({
-    url: '/roles',
+    url: '/management/roles/',
     only: ['resources'],
 })
 
@@ -47,7 +47,7 @@ const getTableRowActions = (row) => {
     return [
         {
             title: 'Edit',
-            action: () => router.get(`roles/${row.id}/edit`)
+            action: () => router.get(`/management/roles/${row.id}/edit`)
         },
         {
             title: 'Delete',
@@ -55,7 +55,7 @@ const getTableRowActions = (row) => {
                 title: 'Confirm Deletion',
                 content: "Please note that by deleting this role, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
                 onConfirm: () => {
-                    router.delete(`/roles/${row.id}`, {
+                    router.delete(`/management/roles/${row.id}`, {
                         onSuccess: () => alert.success('Deleted', `Role ${row.name} has been successfully deleted.`),
                         onError: () => alert.success('Error', `Failed to delete Role ${row.name}`),
                         onFinish: () => deleteModal.close()
@@ -86,7 +86,7 @@ const getTableRowActions = (row) => {
                 <template v-slot:[`item.name`]="{ item }">
                     <span
                         class="text-primary font-weight-bold cursor-pointer"
-                        @click="router.get(`roles/${item.id}`)"
+                        @click="router.get(`/management/roles/${item.id}`)"
                     >
                         {{ item.name }}
                     </span>
@@ -103,7 +103,7 @@ const getTableRowActions = (row) => {
                             variant="flat"
                             color="primary"
                             min-height="42"
-                            @click="router.get('/roles/create')"
+                            @click="router.get('/management/roles/create')"
                         >
                             New
                         </v-btn>

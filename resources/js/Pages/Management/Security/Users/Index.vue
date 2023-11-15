@@ -29,7 +29,7 @@ const {
     refetch,
     queries
 } = useServerDataTable({
-    url: '/users',
+    url: '/management/users',
     only: ['resources'],
     filters: {
         'filter[status]': statusOptions[0].value
@@ -59,7 +59,7 @@ const getTableRowActions = (row) => {
     return [
         {
             title: 'Edit',
-            action: () => router.get(`users/${row.id}/edit`)
+            action: () => router.get(`/management/users/${row.id}/edit`)
         },
         {
             title: 'Delete',
@@ -67,7 +67,7 @@ const getTableRowActions = (row) => {
                 title: 'Confirm Deletion',
                 content: "Please note that by deleting this user, you are also revoking some users' abilities to perform certain actions in the system. Do you want to proceed?",
                 onConfirm: () => {
-                    router.delete(`/users/${row.id}`, {
+                    router.delete(`/management/users/${row.id}`, {
                         onSuccess: () => alert.success('Deleted', `User ${row.name} has been successfully deleted.`),
                         onError: () => alert.success('Error', `Failed to delete User ${row.name}`),
                         onFinish: () => deleteModal.close()
@@ -100,7 +100,7 @@ const getTableRowActions = (row) => {
                             variant="flat"
                             color="primary"
                             min-height="42"
-                            @click="router.get('/users/create')"
+                            @click="router.get('/management/users/create')"
                         >
                             New
                         </v-btn>
@@ -141,7 +141,7 @@ const getTableRowActions = (row) => {
                 <template v-slot:[`item.full_name`]="{ item }">
                     <span
                         class="text-primary font-weight-bold cursor-pointer"
-                        @click="router.get(`users/${item.id}`)"
+                        @click="router.get(`/management/users/${item.id}`)"
                     >
                         {{ item.full_name }}
                     </span>

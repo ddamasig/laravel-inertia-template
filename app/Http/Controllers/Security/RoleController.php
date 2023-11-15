@@ -21,7 +21,7 @@ class RoleController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Roles',
-                'href' => '/roles'
+                'href' => '/management/roles'
             ]
         ];
 
@@ -47,7 +47,7 @@ class RoleController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Roles',
-                'href' => '/roles'
+                'href' => '/management/roles'
             ],
             [
                 'title' => 'Create',
@@ -67,7 +67,7 @@ class RoleController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Roles',
-                'href' => '/roles'
+                'href' => '/management/roles'
             ],
             [
                 'title' => $role->name,
@@ -89,11 +89,11 @@ class RoleController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Roles',
-                'href' => '/roles'
+                'href' => '/management/roles'
             ],
             [
                 'title' => $role->name,
-                'href' => "/roles/$role->id"
+                'href' => "/management/roles/$role->id"
             ],
             [
                 'title' => 'Edit',

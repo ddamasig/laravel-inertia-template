@@ -8,6 +8,7 @@ import {reactive} from "vue";
 
 const props = defineProps({
   tenant: Object,
+  provinces: Array,
   disabled: Boolean
 })
 
@@ -92,6 +93,7 @@ const onSubmitHandler = () => {
         <v-col cols="12" class="pb-12">
           <TenantBasicInformationForm
               :form="form"
+              :provinces="provinces"
               :disabled="disabled"
           />
         </v-col>

@@ -19,7 +19,7 @@ class PermissionController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Permissions',
-                'href' => '/permissions'
+                'href' => '/management/permissions'
             ]
         ];
 
@@ -45,7 +45,7 @@ class PermissionController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Permissions',
-                'href' => '/permissions'
+                'href' => '/management/permissions'
             ],
             [
                 'title' => 'Create',
@@ -62,7 +62,7 @@ class PermissionController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Permissions',
-                'href' => '/permissions'
+                'href' => '/management/permissions'
             ],
             [
                 'title' => $permission->name,
@@ -94,11 +94,11 @@ class PermissionController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Permissions',
-                'href' => '/permissions'
+                'href' => '/management/permissions'
             ],
             [
                 'title' => $permission->name,
-                'href' => "/permissions/$permission->id"
+                'href' => "/management/permissions/$permission->id"
             ],
             [
                 'title' => 'Edit',

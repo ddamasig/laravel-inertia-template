@@ -22,6 +22,20 @@ class TenantService
 {
     use PasswordValidationRules;
 
+    public static function getValidMarketPlans(): array
+    {
+        return [
+            Tenant::MARKET_PLAN_BINARY,
+            Tenant::MARKET_PLAN_TRADITIONAL,
+        ];
+    }
+
+    public static function getValidMarketPlansString(): string
+    {
+        return implode(',', self::getValidMarketPlans());
+    }
+
+
     public static function create(array $input): Tenant
     {
         $tenant = self::createTenantModel($input);

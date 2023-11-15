@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\StoreUserRequest;
-use App\Http\Requests\Users\UpdateUserRequest;
+use App\Http\Requests\Management\Users\StoreUserRequest;
+use App\Http\Requests\Management\Users\UpdateUserRequest;
 use App\Models\User;
 use App\Services\AuthService;
 use App\Services\LocationService;
@@ -37,7 +37,7 @@ class UserController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Users',
-                'href' => '/users'
+                'href' => '/management/users'
             ]
         ];
 
@@ -70,7 +70,7 @@ class UserController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Users',
-                'href' => '/users'
+                'href' => '/management/users'
             ],
             [
                 'title' => 'Create',
@@ -94,7 +94,7 @@ class UserController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Users',
-                'href' => '/users'
+                'href' => '/management/users'
             ],
             [
                 'title' => $user->getFullNameAttribute(),
@@ -120,11 +120,11 @@ class UserController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Users',
-                'href' => '/users'
+                'href' => '/management/users'
             ],
             [
                 'title' => $user->getFullNameAttribute(),
-                'href' => "/users/$user->id"
+                'href' => "/management/users/$user->id"
             ],
             [
                 'title' => 'Edit',

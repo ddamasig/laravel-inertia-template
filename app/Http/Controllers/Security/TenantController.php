@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Management\Tenants\StoreTenantRequest;
 use App\Models\Tenant;
+use App\Services\Admin\TenantService;
 use App\Services\AuthService;
 use App\Services\LocationService;
 use App\Services\LogService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -39,19 +42,21 @@ class TenantController extends Controller
         $resources = QueryBuilder::for(Tenant::class)
             ->allowedFilters([
                 AllowedFilter::callback('search', function (Builder $query, $value) {
-                    $query->where('first_name', 'ilike', "%$value%")
-                        ->orWhere('last_name', 'ilike', "%$value%");
+                    $query->where('name', 'ilike', "%$value%")
+                        ->orWhere('domain', 'ilike', "%$value%");
                 }),
                 'status'
             ])
             ->allowedSorts([
-                AllowedSort::field('full_name', 'first_name'),
+                'name',
+                'domain',
+                'market_type',
                 'email',
                 'mobile_number',
                 'status',
                 'created_at'
             ])
-            ->orderBy('first_name', 'asc')
+            ->orderBy('name', 'asc')
             ->paginate($itemsPerPage);
 
         return Inertia::render('Management/Tenant/Index', [
@@ -140,22 +145,22 @@ class TenantController extends Controller
 //        ]);
 //    }
 //
-//    public function store(StoreUserRequest $request): RedirectResponse
-//    {
-//        try {
-//            UserService::create($request->all());
-//        } catch (\Exception $exception) {
-//            $this->logger->activity('debug', 'Failed to create user.', [
-//                'exception' => $exception,
-//                'input' => $request->all(),
-//            ]);
-//
-//            return redirect()->back()->withErrors([
-//                'custom' => 'Failed to create user.'
-//            ]);
-//        }
-//        return to_route('users.index');
-//    }
+    public function store(StoreTenantRequest $request): RedirectResponse
+    {
+        try {
+            TenantService::create($request->all());
+        } catch (\Exception $exception) {
+            $this->logger->activity('debug', 'Failed to create user.', [
+                'exception' => $exception,
+                'input' => $request->all(),
+            ]);
+
+            return redirect()->back()->withErrors([
+                'custom' => 'Failed to create user.'
+            ]);
+        }
+        return to_route('users.index');
+    }
 //
 //    public function update(UpdateUserRequest $request, User $user): RedirectResponse
 //    {
