@@ -55,7 +55,7 @@ const links = [
         text: 'Access Logs',
         group: 'access-logs',
         icon: mdiSecurity,
-        link: '/access-logs',
+        link: '/management/access-logs',
         permissions: ['list:logs'],
     },
 ]

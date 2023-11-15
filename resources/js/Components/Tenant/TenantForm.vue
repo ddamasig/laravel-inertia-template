@@ -25,6 +25,7 @@ const form = useForm({
   market_plan: props.tenant?.market_plan ?? null,
   max_sub_accounts: props.tenant?.max_sub_accounts ?? null,
   account_upgrades_enabled: props.tenant?.account_upgrades_enabled ?? null,
+  can_only_upgrade_once: props.tenant?.can_only_upgrade_once ?? false,
   account_levels: props.tenant?.account_levels ?? [{name: 'Silver', cost: 2000}],
   direct_referral_bonus_enabled: props.tenant?.direct_referral_bonus_enabled ?? null,
   direct_referral_bonus_amount: props.tenant?.direct_referral_bonus_amount ?? null,
@@ -44,6 +45,12 @@ const form = useForm({
   eloading_enabled: props.tenant?.eloading_enabled ?? null,
   insurance_enabled: props.tenant?.insurance_enabled ?? null,
   bills_payment_enabled: props.tenant?.bills_payment_enabled ?? null,
+  color_primary: props.tenant?.color_primary ?? null,
+  color_success: props.tenant?.color_success ?? null,
+  color_error: props.tenant?.color_error ?? null,
+  color_warning: props.tenant?.color_warning ?? null,
+  color_info: props.tenant?.color_info ?? null,
+  logo: props.tenant?.logo ?? null,
 });
 
 const state = reactive({

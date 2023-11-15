@@ -6,6 +6,7 @@ use App\Services\Admin\TenantService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
 class StoreTenantRequest extends FormRequest
@@ -17,7 +18,7 @@ class StoreTenantRequest extends FormRequest
      */
     public function rules(Request $request): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:16'],
             'contact_person' => ['required', 'string', 'max:255'],
@@ -31,16 +32,38 @@ class StoreTenantRequest extends FormRequest
                 'required',
                 "in:" . TenantService::getValidMarketPlansString(),
             ],
-//            'password' => [
-//                Rule::excludeIf($request->password_mode !== 'manual'),
-//                'required',
-//                'min:8',
-//                'confirmed'
-//            ],
+            'market_plan' => [
+                Rule::excludeIf($request->password_mode !== 'manual'),
+                'required',
+                'min:8',
+                'confirmed'
+            ],
             'logo' => [
                 'nullable',
                 File::types(['png', 'jpg', 'bmp'])
                     ->max(3 * 1024)
+            ],
+        ];
+
+        $marketPlan = $request->market_plan;
+        switch ($marketPlan) {
+            case 'binary':
+                $rules = array_merge($rules, $this->getBinaryRules($request));
+                break;
+            default:
+                break;
+        }
+
+        return $rules;
+    }
+
+    public function getBinaryRules(Request $request): array
+    {
+        return [
+            'can_only_upgrade_once' => [
+                Rule::excludeIf(!$request->account_upgrades_enabled),
+                'required',
+                'boolean',
             ],
         ];
     }
