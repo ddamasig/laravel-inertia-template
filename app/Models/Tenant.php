@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
@@ -32,12 +31,12 @@ class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
         'logo_url',
         'market_plan',
         'has_account_levels',
-        'has_infinity_bonus',
-        'has_fifth_pairs',
-        'has_pairing_bonus',
-        'has_direct_referral_bonus',
-        'has_region_tagging_bonus',
-        'has_flush_out',
+        'infinity_bonus_enabled',
+        'pairing_bonus_fifth_pairs_enabled',
+        'pairing_bonus_enabled',
+        'direct_referral_bonus_enabled',
+        'region_tagging_bonus_enabled',
+        'flush_out_enabled',
         'market_plan',
         'color_primary',
         'color_primary_faded',

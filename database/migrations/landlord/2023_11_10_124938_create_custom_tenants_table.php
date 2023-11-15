@@ -21,12 +21,12 @@ return new class extends Migration
             $table->string('market_plan')->default('binary');
             $table->boolean('has_account_levels')->default(false);
             $table->integer('maximum_sub_accounts')->default(7);
-            $table->boolean('has_infinity_bonus')->default(false);
-            $table->boolean('has_pairing_bonus')->default(false);
-            $table->boolean('has_fifth_pairs')->default(false);
-            $table->boolean('has_direct_referral_bonus')->default(false);
-            $table->boolean('has_region_tagging_bonus')->default(false);
-            $table->boolean('has_flush_out')->default(false);
+            $table->boolean('infinity_bonus_enabled')->default(false);
+            $table->boolean('pairing_bonus_enabled')->default(false);
+            $table->boolean('pairing_bonus_fifth_pairs_enabled')->default(false);
+            $table->boolean('direct_referral_bonus_enabled')->default(false);
+            $table->boolean('region_tagging_bonus_enabled')->default(false);
+            $table->boolean('flush_out_enabled')->default(false);
             // Colors
             $table->string('color_primary', 7)->default('#376fd0');
             $table->string('color_primary_faded', 7)->default('#e9efff');

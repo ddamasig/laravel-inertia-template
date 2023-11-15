@@ -1,59 +1,88 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
-import PageHeader from "@/Components/Layout/PageHeader.vue";
-import RoleForm from "@/Components/Roles/RoleForm.vue";
-import UserForm from "@/Components/Users/UserForm.vue";
-import TenantBasicInformationForm from "@/Components/Tenant/TenantBasicInformationForm.vue";
-import TenantSettingsForm from "@/Components/Tenant/TenantConfigurationForm.vue";
-import TenantConfigurationForm from "@/Components/Tenant/TenantConfigurationForm.vue";
-import TenantServiceSettings from "@/Components/Tenant/TenantServiceSettings.vue";
-import TenantBrandingForm from "@/Components/Tenant/TenantBrandingForm.vue";
+import {useForm} from "@inertiajs/vue3";
+import {reactive} from "vue";
+import TenantForm from "@/Components/Tenant/TenantForm.vue";
 
 const props = defineProps({
-    breadcrumbs: Array,
-    permissions: Array,
-    provinces: Array,
-    roles: Array,
+  breadcrumbs: Array,
+  provinces: Array,
+  tenant: Object,
 })
+
+const form = useForm({
+  name: props.tenant?.name ?? null,
+  domain: props.tenant?.domain ?? null,
+  contact_person: props.tenant?.contact_person ?? null,
+  email: props.tenant?.email ?? null,
+  mobile_number: props.tenant?.mobile_number ?? null,
+  province: props.tenant?.province ?? null,
+  municipality: props.tenant?.municipality ?? null,
+  additional_address_information: props.tenant?.additional_address_information ?? null,
+  status: props.tenant?.status ?? 'active',
+  market_plan: props.tenant?.market_plan ?? null,
+  max_sub_accounts: props.tenant?.max_sub_accounts ?? null,
+  account_upgrades_enabled: props.tenant?.account_upgrades_enabled ?? null,
+  account_levels: props.tenant?.account_levels ?? [{name: 'Silver', cost: 2000}],
+});
+
+const state = reactive({
+  loading: false
+})
+
+const onSubmitHandler = () => {
+  const action = props.tenant ? 'update' : 'create';
+  const options = {
+    preserveState: true,
+    onStart: () => {
+      form.processing = true
+    },
+    onError: (error) => {
+      alert.error('Error', `Failed to ${action} tenant ${form.name}.`)
+      alert.handleError(error)
+    },
+    onSuccess: () => {
+      alert.success('Success', `Successfully ${action}d tenant ${form.name}.`)
+    },
+    onFinish: () => form.processing = false,
+  }
+
+  const transformFunction = (data) => ({
+    name: form.name,
+    domain: form.domain,
+    contact_person: form.contact_person,
+    email: form.email,
+    mobile_number: form.mobile_number,
+    status: form.status ?? null,
+    province_id: form.province?.id ?? null,
+    municipality_id: form.municipality?.id ?? null,
+    market_plan: form.market_plan ?? null,
+    max_sub_accounts: form.max_sub_accounts?.id ?? 7,
+    account_upgrades_enabled: form.account_upgrades_enabled?.id ?? false,
+    account_levels: form.account_levels ?? null,
+  })
+
+  if (props.disabled) {
+    return
+  }
+
+  if (props.user) {
+    form.transform(transformFunction).post(`/users/${props.user.id}`, options)
+    return
+  }
+
+  form.transform(transformFunction).post('/users', options)
+}
+
+const disabled = false;
 
 </script>
 
 <template>
-    <AppLayout title="Create Tenant" :breadcrumbs="breadcrumbs">
-        <v-sheet style="display: flex; flex-direction: column;">
-
-            <v-row class="mt-4 border-b">
-                <v-col cols="12" class="pb-12">
-                    <TenantBasicInformationForm
-                        :disabled="props.disabled"
-                    />
-                </v-col>
-            </v-row>
-
-            <v-row class="mt-4 border-b">
-                <v-col cols="12" class="pb-12">
-                    <TenantConfigurationForm
-                        :disabled="props.disabled"
-                    />
-                </v-col>
-            </v-row>
-
-            <v-row class="mt-4 border-b">
-                <v-col cols="12" class="pb-12">
-                    <TenantServiceSettings
-                        :disabled="props.disabled"
-                    />
-                </v-col>
-            </v-row>
-
-            <v-row class="mt-4 border-b">
-                <v-col cols="12" class="pb-12">
-                    <TenantBrandingForm
-                        :disabled="props.disabled"
-                    />
-                </v-col>
-            </v-row>
-        </v-sheet>
-    </AppLayout>
+  <AppLayout title="Create Tenant" :breadcrumbs="breadcrumbs">
+    <TenantForm
+        :tenant="tenant"
+        :provinces="provinces"
+    />
+  </AppLayout>
 </template>
