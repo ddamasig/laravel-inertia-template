@@ -27,7 +27,11 @@ class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
 
     // Market Plans
     const MARKET_PLAN_BINARY = 'binary';
-    const MARKET_PLAN_TRADITIONAL = 'tranditional';
+    const MARKET_PLAN_TRADITIONAL = 'traditional';
+
+    // Region Tagging Bonus Commission Mode
+    const REGION_TAGGING_BONUS_COMMISSION_MODE_FIXED_VALUE = 'fixed';
+    const REGION_TAGGING_BONUS_COMMISSION_MODE_PERCENTAGE = 'percentage';
 
     protected $fillable = [
         'name',

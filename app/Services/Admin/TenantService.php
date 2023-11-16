@@ -22,6 +22,19 @@ class TenantService
 {
     use PasswordValidationRules;
 
+    public static function getValidRegionTaggingBonusCommissionModes(): array
+    {
+        return [
+            Tenant::REGION_TAGGING_BONUS_COMMISSION_MODE_FIXED_VALUE,
+            Tenant::REGION_TAGGING_BONUS_COMMISSION_MODE_PERCENTAGE,
+        ];
+    }
+
+    public static function getValidRegionTaggingBonusCommissionModesString(): string
+    {
+        return implode(',', self::getValidRegionTaggingBonusCommissionModes());
+    }
+
     public static function getValidMarketPlans(): array
     {
         return [

@@ -19,10 +19,11 @@ class StoreTenantRequest extends FormRequest
     public function rules(Request $request): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:256'],
             'domain' => ['required', 'string', 'max:16'],
-            'contact_person' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:tenants'],
+            'database' => ['required', 'string', 'max:256'],
+            'contact_person' => ['required', 'string', 'max:256'],
+            'email' => ['required', 'string', 'email', 'max:256', 'unique:tenants'],
             'mobile_number' => ['required', 'string', 'max:11'],
             'province_id' => ['required'],
             'municipality_id' => ['required'],
@@ -32,16 +33,46 @@ class StoreTenantRequest extends FormRequest
                 'required',
                 "in:" . TenantService::getValidMarketPlansString(),
             ],
-            'market_plan' => [
-                Rule::excludeIf($request->password_mode !== 'manual'),
+            'ticketing_enabled' => [
                 'required',
-                'min:8',
-                'confirmed'
+                'boolean',
+            ],
+            'eloading_enabled' => [
+                'required',
+                'boolean',
+            ],
+            'insurance_enabled' => [
+                'required',
+                'boolean',
+            ],
+            'bills_payment_enabled' => [
+                'required',
+                'boolean',
             ],
             'logo' => [
                 'nullable',
                 File::types(['png', 'jpg', 'bmp'])
                     ->max(3 * 1024)
+            ],
+            'color_primary' => [
+                'required',
+                'max:7'
+            ],
+            'color_success' => [
+                'required',
+                'max:7'
+            ],
+            'color_error' => [
+                'required',
+                'max:7'
+            ],
+            'color_info' => [
+                'required',
+                'max:7'
+            ],
+            'color_warning' => [
+                'required',
+                'max:7'
             ],
         ];
 
@@ -59,11 +90,99 @@ class StoreTenantRequest extends FormRequest
 
     public function getBinaryRules(Request $request): array
     {
+        $accountUpgradeRule = Rule::excludeIf(!$request->account_upgrades_enabled);
+        $directReferralBonusRule = Rule::excludeIf(!$request->direct_referral_bonus_enabled);
+        $pairingBonusRule = Rule::excludeIf(!$request->pairing_bonus_enabled);
+        $infinityBonusRule = Rule::excludeIf(!$request->infinity_bonus_enabled);
+        $regionTaggingBonusRule = Rule::excludeIf(!$request->region_tagging_bonus_enabled);
+
         return [
+            // Account Upgrade Rules
             'can_only_upgrade_once' => [
-                Rule::excludeIf(!$request->account_upgrades_enabled),
+                $accountUpgradeRule,
                 'required',
                 'boolean',
+            ],
+            'account_levels' => [
+                $accountUpgradeRule,
+                'required',
+                'array'
+            ],
+            'account_levels.*.name' => [
+                $accountUpgradeRule,
+                'required',
+                'string',
+                'max:128',
+            ],
+            'account_levels.*.cost' => [
+                $accountUpgradeRule,
+                'required',
+                'int',
+                'max:50000',
+            ],
+
+            // Direct Referral Bonus Rules
+            'direct_referral_bonus_amount' => [
+                $directReferralBonusRule,
+                'required',
+                'int',
+                'max:50000',
+            ],
+
+            // Pairing Bonus Rules
+            'pairing_bonus_amount' => [
+                $pairingBonusRule,
+                'required',
+                'int',
+                'max:50000',
+            ],
+            'pairing_bonus_max_pairs_pairs' => [
+                $pairingBonusRule,
+                'required',
+                'int',
+                'max:300',
+            ],
+            'fifth_pairs_enabled' => [
+                $pairingBonusRule,
+                'required',
+                'boolean',
+            ],
+            'flush_out_enabled' => [
+                $pairingBonusRule,
+                'required',
+                'boolean',
+            ],
+            'pairing_bonus_max_waiting_points' => [
+                $pairingBonusRule,
+                'required',
+                'int',
+                'max:50000',
+            ],
+
+            // Infinity Bonus Rules
+            'infinity_bonus_amount' => [
+                $infinityBonusRule,
+                'required',
+                'int',
+                'max:50000',
+            ],
+            'infinity_bonus_starting_level' => [
+                $infinityBonusRule,
+                'required',
+                'int',
+                'max:50',
+            ],
+
+            // Region Tagging Bonus Rules
+            'region_tagging_bonus_commission_mode' => [
+                $regionTaggingBonusRule,
+                'required',
+                'in:' . TenantService::getValidRegionTaggingBonusCommissionModesString(),
+            ],
+            'region_tagging_bonus_amount' => [
+                $regionTaggingBonusRule,
+                'required',
+                'int',
             ],
         ];
     }
