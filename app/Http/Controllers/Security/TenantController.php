@@ -150,6 +150,7 @@ class TenantController extends Controller
         try {
             TenantService::create($request->all());
         } catch (\Exception $exception) {
+            dd($exception->getMessage());
             $this->logger->activity('debug', 'Failed to create user.', [
                 'exception' => $exception,
                 'input' => $request->all(),

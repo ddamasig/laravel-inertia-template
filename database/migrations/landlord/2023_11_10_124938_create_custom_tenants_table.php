@@ -18,15 +18,28 @@ return new class extends Migration
             $table->string('logo_url')->nullable();
             $table->string('status')->default('active');
             // Settings
-            $table->string('market_plan')->default('binary');
-            $table->boolean('has_account_levels')->default(false);
-            $table->integer('maximum_sub_accounts')->default(7);
-            $table->boolean('infinity_bonus_enabled')->default(false);
-            $table->boolean('pairing_bonus_enabled')->default(false);
-            $table->boolean('pairing_bonus_fifth_pairs_enabled')->default(false);
+            $table->string('market_plan');
+            $table->integer('max_sub_accounts')->default(7);
+            $table->boolean('account_upgrade_enabled')->default(false);
             $table->boolean('direct_referral_bonus_enabled')->default(false);
-            $table->boolean('region_tagging_bonus_enabled')->default(false);
+            $table->float('direct_referral_bonus_amount')->default(0);
+            $table->boolean('pairing_bonus_enabled')->default(false);
+            $table->float('pairing_bonus_amount')->default(0);
+            $table->boolean('pairing_bonus_fifth_pairs_enabled')->default(false);
+            $table->integer('pairing_bonus_max_pairs')->default(0);
             $table->boolean('flush_out_enabled')->default(false);
+            $table->integer('pairing_bonus_max_waiting_points')->default(0);
+            $table->boolean('infinity_bonus_enabled')->default(false);
+            $table->float('infinity_bonus_amount')->default(0);
+            $table->integer('infinity_bonus_starting_level')->default(0);
+            $table->boolean('region_tagging_bonus_enabled')->default(false);
+            $table->string('region_tagging_bonus_commission_mode')->nullable();
+            $table->float('region_tagging_bonus_amount')->default(0);
+            // Services
+            $table->boolean('ticketing_enabled')->default(false);
+            $table->boolean('eloading_enabled')->default(false);
+            $table->boolean('insurance_enabled')->default(false);
+            $table->boolean('bills_payment_enabled')->default(false);
             // Colors
             $table->string('color_primary', 7)->default('#376fd0');
             $table->string('color_primary_faded', 7)->default('#e9efff');

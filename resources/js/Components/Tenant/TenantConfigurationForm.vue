@@ -296,7 +296,7 @@ const removeAccountLevel = (index) => {
                             />
                             <TextField
                                 v-if="form.region_tagging_bonus_commission_mode === 'fixed'"
-                                v-model="form.region_tagging_value"
+                                v-model="form.region_tagging_bonus_amount"
                                 label="Commission - Fixed Value *"
                                 name="region_tagging_bonus_amount"
                                 :form="form"
@@ -304,7 +304,7 @@ const removeAccountLevel = (index) => {
                             />
                             <TextField
                                 v-if="form.region_tagging_bonus_commission_mode === 'percentage'"
-                                v-model="form.region_tagging_value"
+                                v-model="form.region_tagging_bonus_amount"
                                 label="Commission - Percentage *"
                                 name="region_tagging_bonus_amount"
                                 suffix="%"

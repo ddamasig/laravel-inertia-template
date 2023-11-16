@@ -5,18 +5,8 @@ namespace App\Services\Admin;
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Exceptions\MissingEmailException;
 use App\Models\Tenant;
-use App\Models\User;
-use App\Notifications\AccountDisabledNotification;
 use App\Services\UserService;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Permission\Models\Role;
 
 class TenantService
 {
@@ -52,7 +42,7 @@ class TenantService
     public static function create(array $input): Tenant
     {
         $tenant = self::createTenantModel($input);
-        $owner = UserService::create($input);
+//        $owner = UserService::create($input);
         return $tenant->refresh();
     }
 
@@ -64,27 +54,51 @@ class TenantService
     public static function createTenantModel(array $input): Tenant
     {
         $payload = Arr::only($input, [
+            // Basic Information
             'name',
-            'logo_url',
-            'market_plan',
-            'has_account_levels',
-            'infinity_bonus_enabled',
-            'pairing_bonus_fifth_pairs_enabled',
-            'pairing_bonus_enabled',
-            'direct_referral_bonus_enabled',
-            'region_tagging_bonus_enabled',
-            'flush_out_enabled',
-            'market_plan',
-            'color_primary',
-            'color_primary_faded',
-            'color_error',
-            'color_success',
-            'color_dark',
-            'color_background',
+            'domain',
+            'database',
+            'contact_person',
             'email',
+            'mobile_number',
+            'province_id',
+            'municipality_id',
+            'additional_address_information',
+            // Feature Configuration
+            'market_plan',
+            'max_sub_accounts',
+            'account_upgrades_enabled',
+            'can_only_upgrade_once',
+            'account_levels',
+            'direct_referral_bonus_enabled',
+            'direct_referral_bonus_amount',
+            'pairing_bonus_enabled',
+            'pairing_bonus_amount',
+            'pairing_bonus_max_pairs',
+            'pairing_bonus_fifth_pairs_enabled',
+            'flush_out_enabled',
+            'pairing_bonus_max_waiting_points',
+            'infinity_bonus_enabled',
+            'infinity_bonus_amount',
+            'infinity_bonus_starting_level',
+            'region_tagging_bonus_enabled',
+            'region_tagging_bonus_commission_mode',
+            'region_tagging_bonus_amount',
+            // Services
+            'ticketing_enabled',
+            'eloading_enabled',
+            'insurance_enabled',
+            'bills_payment_enabled',
+            // Brand Customization
+            'logo_url',
+            'color_primary',
+            'color_success',
+            'color_error',
+            'color_info',
+            'color_warning',
         ]);
 
-        $tenant = Tenant::firstOrCreate($payload);
+        $tenant = Tenant::create($payload);
 
         return $tenant->refresh();
     }
@@ -94,7 +108,6 @@ class TenantService
      * @param Tenant $tenant
      * @param array $input
      * @return Tenant
-     * @throws MissingEmailException
      */
     public static function updateModel(Tenant $tenant, array $input): Tenant
     {

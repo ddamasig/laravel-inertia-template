@@ -20,10 +20,10 @@ class StoreTenantRequest extends FormRequest
     {
         $rules = [
             'name' => ['required', 'string', 'max:256'],
-            'domain' => ['required', 'string', 'max:16'],
-            'database' => ['required', 'string', 'max:256'],
+            'domain' => ['required', 'string', 'max:125'],
+            'database' => ['required', 'string', 'max:64'],
             'contact_person' => ['required', 'string', 'max:256'],
-            'email' => ['required', 'string', 'email', 'max:256', 'unique:tenants'],
+            'email' => ['required', 'string', 'email', 'max:256', 'unique:custom_tenants'],
             'mobile_number' => ['required', 'string', 'max:11'],
             'province_id' => ['required'],
             'municipality_id' => ['required'],
@@ -136,13 +136,13 @@ class StoreTenantRequest extends FormRequest
                 'int',
                 'max:50000',
             ],
-            'pairing_bonus_max_pairs_pairs' => [
+            'pairing_bonus_max_pairs' => [
                 $pairingBonusRule,
                 'required',
                 'int',
                 'max:300',
             ],
-            'fifth_pairs_enabled' => [
+            'pairing_bonus_fifth_pairs_enabled' => [
                 $pairingBonusRule,
                 'required',
                 'boolean',

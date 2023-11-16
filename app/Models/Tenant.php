@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
@@ -15,7 +14,6 @@ use Spatie\Multitenancy\Models\Concerns\UsesLandlordConnection;
 
 class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
 {
-    use Notifiable;
     use InteractsWithMedia;
 
     use UsesLandlordConnection;
@@ -70,10 +68,9 @@ class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
     {
         // add logic to create database
         try {
-            $database = DB::statement('CREATE DATABASE mt_' . $this->domain);
+            $database = DB::statement("CREATE DATABASE \"mt_$this->domain\"");
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-
         }
     }
 
