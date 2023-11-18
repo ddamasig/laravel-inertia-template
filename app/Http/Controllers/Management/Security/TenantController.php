@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Security;
+namespace App\Http\Controllers\Management\Security;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\Tenants\StoreTenantRequest;
 use App\Models\Tenant;
+use App\Models\User;
 use App\Services\Admin\TenantService;
 use App\Services\AuthService;
 use App\Services\LocationService;
@@ -15,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TenantController extends Controller
@@ -70,7 +70,7 @@ class TenantController extends Controller
         $breadcrumbs = [
             [
                 'title' => 'Tenants',
-                'href' => '/tenants'
+                'href' => '/management/tenants'
             ],
             [
                 'title' => 'Create',
@@ -89,31 +89,35 @@ class TenantController extends Controller
         ]);
     }
 
-//    public function show(User $user): \Inertia\Response
-//    {
-//        $breadcrumbs = [
-//            [
-//                'title' => 'Users',
-//                'href' => '/users'
-//            ],
-//            [
-//                'title' => $user->getFullNameAttribute(),
-//            ],
-//        ];
-//
-//        $user = User::with(['province', 'municipality'])
-//            ->find($user->id);
-//        $roles = AuthService::getRoles(true);
-//        $permissions = AuthService::getPermissions();
-//
-//        return Inertia::render('Management/Security/Users/Show', [
-//            'breadcrumbs' => $breadcrumbs,
-//            'user' => $user,
-//            'permissions' => $permissions,
-//            'provinces' => LocationService::getProvinces(),
-//            'roles' => $roles,
-//        ]);
-//    }
+    public function show(Tenant $tenant): \Inertia\Response
+    {
+        $breadcrumbs = [
+            [
+                'title' => 'Tenants',
+                'href' => '/management/tenants'
+            ],
+            [
+                'title' => $tenant->name,
+            ],
+        ];
+
+        $tenant = Tenant::with(['province', 'municipality'])
+            ->find($tenant->id);
+        $owner = $tenant->execute(function (Tenant $tenant) {
+           return $tenant->name;
+        });
+        dd($owner);
+        $roles = AuthService::getRoles(true);
+        $permissions = AuthService::getPermissions();
+
+        return Inertia::render('Management/Tenant/Show', [
+            'breadcrumbs' => $breadcrumbs,
+            'tenant' => $tenant,
+            'permissions' => $permissions,
+            'provinces' => LocationService::getProvinces(),
+            'roles' => $roles,
+        ]);
+    }
 //
 //    public function edit(Request $request, User $user): \Inertia\Response
 //    {
@@ -148,19 +152,20 @@ class TenantController extends Controller
     public function store(StoreTenantRequest $request): RedirectResponse
     {
         try {
-            TenantService::create($request->all());
+            $tenant = TenantService::create($request->all());
         } catch (\Exception $exception) {
-            dd($exception->getMessage());
             $this->logger->activity('debug', 'Failed to create user.', [
                 'exception' => $exception,
                 'input' => $request->all(),
             ]);
 
             return redirect()->back()->withErrors([
-                'custom' => 'Failed to create user.'
+                'custom' => 'Failed to create tenant.'
             ]);
         }
-        return to_route('users.index');
+        return to_route('tenants.show', [
+            'tenant' => $tenant
+        ]);
     }
 //
 //    public function update(UpdateUserRequest $request, User $user): RedirectResponse

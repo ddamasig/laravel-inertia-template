@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\Security\PermissionController;
-use App\Http\Controllers\Security\RoleController;
-use App\Http\Controllers\Security\TenantController;
-use App\Http\Controllers\Security\UserController;
+use App\Http\Controllers\Management\Security\PermissionController;
+use App\Http\Controllers\Management\Security\RoleController;
+use App\Http\Controllers\Management\Security\TenantController;
+use App\Http\Controllers\Management\Security\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------

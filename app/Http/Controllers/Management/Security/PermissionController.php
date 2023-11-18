@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Security;
+namespace App\Http\Controllers\Management\Security;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
