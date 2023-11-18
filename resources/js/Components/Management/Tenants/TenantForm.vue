@@ -1,8 +1,8 @@
 <script setup>
-import TenantBasicInformationForm from "@/Components/Tenant/TenantBasicInformationForm.vue";
-import TenantConfigurationForm from "@/Components/Tenant/TenantConfigurationForm.vue";
-import TenantServiceSettings from "@/Components/Tenant/TenantServicesForm.vue";
-import TenantBrandingForm from "@/Components/Tenant/TenantBrandingForm.vue";
+import TenantBasicInformationForm from "@/Components/Management/Tenants/TenantBasicInformationForm.vue";
+import TenantConfigurationForm from "@/Components/Management/Tenants/TenantConfigurationForm.vue";
+import TenantServiceSettings from "@/Components/Management/Tenants/TenantServicesForm.vue";
+import TenantBrandingForm from "@/Components/Management/Tenants/TenantBrandingForm.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import {reactive} from "vue";
 import {useAlertStore} from "@/Stores/AlertStore.js";
@@ -56,7 +56,7 @@ const form = useForm({
   // color_info: props.tenant?.color_info ?? null,
   // logo: props.tenant?.logo ?? null,
   name: 'MegaDC',
-  domain: 'megadc.services.com',
+  domain: 'megadc',
   database: 'megadc',
   contact_person: 'John Jackson Betito',
   email: 'johnjacksonbetito8@example.com',

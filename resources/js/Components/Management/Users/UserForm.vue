@@ -6,7 +6,7 @@ import TextField from "@/Components/Common/Forms/TextField.vue";
 import SearchableSelect from "@/Components/Common/Forms/SearchableSelect.vue";
 import Select from "@/Components/Common/Forms/Select.vue";
 import ImageUploader from "@/Components/Common/Forms/ImageUploader.vue";
-import PermissionQuickList from "@/Components/Permissions/PermissionQuickList.vue";
+import PermissionQuickList from "@/Components/Common/Permissions/PermissionQuickList.vue";
 import SwitchField from "@/Components/Common/Forms/SwitchField.vue";
 
 const alert = useAlertStore()

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder
 {

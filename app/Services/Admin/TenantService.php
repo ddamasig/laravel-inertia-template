@@ -7,6 +7,8 @@ use App\Exceptions\MissingEmailException;
 use App\Models\Tenant;
 use App\Services\UserService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class TenantService
 {
@@ -41,9 +43,14 @@ class TenantService
 
     public static function create(array $input): Tenant
     {
-        $tenant = self::createTenantModel($input);
-//        $owner = UserService::create($input);
-        return $tenant->refresh();
+        try {
+            $tenant = self::createTenantModel($input);
+//            $owner = UserService::create($input);
+            return $tenant->refresh();
+        } catch (\Exception $exception) {
+            dd($exception);
+            throw $exception;
+        }
     }
 
     /**

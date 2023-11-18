@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import UserForm from "@/Components/Users/UserForm.vue";
+import UserForm from "@/Components/Management/Users/UserForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,

@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('status', 8)->default('active');
             $table->rememberToken();
+            $table->foreignId('tenant_id')->nullable();
             $table->foreignId('current_team_id')->nullable();
             $table->foreignId('province_id')->constrained('provinces')->nullable();
             $table->foreignId('municipality_id')->constrained('municipalities')->nullable();

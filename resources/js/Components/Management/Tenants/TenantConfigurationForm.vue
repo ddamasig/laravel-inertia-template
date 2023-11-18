@@ -4,7 +4,7 @@ import Select from "@/Components/Common/Forms/Select.vue";
 import SwitchField from "@/Components/Common/Forms/SwitchField.vue";
 import Checkbox from "@/Components/Common/Forms/Checkbox.vue";
 import {mdiCheck, mdiPlus, mdiTrashCan} from "@mdi/js";
-import FeatureStatusIndicator from "@/Components/Tenant/FeatureStatusIndicator.vue";
+import FeatureStatusIndicator from "@/Components/Management/Tenants/FeatureStatusIndicator.vue";
 import FormSection from "@/Components/Common/Forms/FormSection.vue";
 
 const props = defineProps({

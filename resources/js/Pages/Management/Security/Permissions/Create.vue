@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import PermissionForm from "@/Components/Permissions/PermissionForm.vue";
+import PermissionForm from "@/Components/Common/Permissions/PermissionForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,

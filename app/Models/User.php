@@ -17,10 +17,12 @@ use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
+//    use UsesTenantConnection;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -48,6 +50,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'email',
         'username',
         'password',
+        'tenant_id',
     ];
 
     /**

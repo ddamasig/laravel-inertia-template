@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Breadcrumbs from "@/Components/Layout/Breadcrumbs.vue";
 import PageHeader from "@/Components/Layout/PageHeader.vue";
-import UserForm from "@/Components/Users/UserForm.vue";
+import UserForm from "@/Components/Management/Users/UserForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,

@@ -2,9 +2,9 @@
 import {router, useForm} from "@inertiajs/vue3";
 import {reactive} from "vue";
 import {useAlertStore} from "@/Stores/AlertStore.js";
-import PermissionFormSelectorItem from "@/Components/Permissions/PermissionFormSelector/PermissionFormSelectorItem.vue";
+import PermissionFormSelectorItem from "@/Components/Common/Permissions/PermissionFormSelector/PermissionFormSelectorItem.vue";
 import {mdiMagnify} from "@mdi/js";
-import PermissionFormSelector from "@/Components/Permissions/PermissionFormSelector/PermissionFormSelector.vue";
+import PermissionFormSelector from "@/Components/Common/Permissions/PermissionFormSelector/PermissionFormSelector.vue";
 
 const alert = useAlertStore()
 const props = defineProps({

@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import RoleForm from "@/Components/Roles/RoleForm.vue";
+import RoleForm from "@/Components/Common/Roles/RoleForm.vue";
 
 const props = defineProps({
     breadcrumbs: Array,

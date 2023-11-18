@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('custom_tenants', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('domain')->unique();
+            $table->string('domain', 128)->unique();
+            $table->string('database', 256)->unique();
             $table->string('logo_url')->nullable();
             $table->string('status')->default('active');
             // Settings

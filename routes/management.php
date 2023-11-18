@@ -18,14 +18,19 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
-    return Inertia::render('Dashboard', [
-    ]);
-})->name('dashboard');
-
-Route::resource('users', UserController::class)->except(['update']);
-Route::post('users/{user}', [UserController::class, 'update']);
-Route::resource('tenants', TenantController::class)->except(['update']);
-Route::post('tenants/{tenant}', [TenantController::class, 'update']);
-Route::resource('roles', RoleController::class);
-Route::resource('permissions', PermissionController::class);
+Route::group([
+    'prefix' => 'management',
+    'middleware' => [
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+        'management'
+    ]
+], function () {
+    Route::resource('users', UserController::class)->except(['update']);
+    Route::post('users/{user}', [UserController::class, 'update']);
+    Route::resource('tenants', TenantController::class)->except(['update']);
+    Route::post('tenants/{tenant}', [TenantController::class, 'update']);
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
+});

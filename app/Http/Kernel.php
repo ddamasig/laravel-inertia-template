@@ -4,6 +4,8 @@ namespace App\Http;
 
 use App\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\HasTenant;
+use App\Http\Middleware\Management\HasManagementAccount;
+use App\Http\Middleware\Management\IsOnManagementSubdomain;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -53,6 +55,11 @@ class Kernel extends HttpKernel
             HasTenant::class,
             \Spatie\Multitenancy\Http\Middleware\NeedsTenant::class,
             \Spatie\Multitenancy\Http\Middleware\EnsureValidTenantSession::class,
+        ],
+
+        'management' => [
+            IsOnManagementSubdomain::class,
+            HasManagementAccount::class,
         ]
     ];
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
@@ -34,6 +35,7 @@ class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
     protected $fillable = [
         'name',
         'domain',
+        'database',
         'logo_url',
         'market_plan',
         'has_account_levels',
@@ -68,7 +70,7 @@ class Tenant extends \Spatie\Multitenancy\Models\Tenant implements HasMedia
     {
         // add logic to create database
         try {
-            $database = DB::statement("CREATE DATABASE \"mt_$this->domain\"");
+            $database = DB::statement("CREATE DATABASE \"mt_$this->database\"");
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
         }

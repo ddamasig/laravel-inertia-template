@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {useForm} from "@inertiajs/vue3";
 import {reactive} from "vue";
-import TenantForm from "@/Components/Tenant/TenantForm.vue";
+import TenantForm from "@/Components/Management/Tenants/TenantForm.vue";
 
 const props = defineProps({
   breadcrumbs: Array,

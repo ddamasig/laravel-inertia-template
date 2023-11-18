@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/dashboard';
+    public const HOME = '/';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -28,34 +28,15 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+        Route::group(['domain' => '{subdomain}.' . config('app.url')], function () {
+            $this->routes(function () {
+                Route::middleware('api')
+                    ->prefix('api')
+                    ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+                Route::middleware('web')
+                    ->group(base_path('routes/web.php'));
+            });
         });
-
-        $this->mapManagementRoutes();
-    }
-
-    /**
-     * Define the Management routes of the application.
-     *
-     *
-     * @return void
-     */
-    protected function mapManagementRoutes()
-    {
-        Route::prefix('management')
-            ->middleware([
-                'web',
-                'auth:sanctum',
-                config('jetstream.auth_session'),
-                'verified',
-            ])
-            ->namespace($this->namespace) // leave it as is
-            ->group(base_path('routes/management.php'));
     }
 }

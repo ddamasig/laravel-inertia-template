@@ -1,10 +1,5 @@
 <?php
 
-use App\Http\Controllers\Security\PermissionController;
-use App\Http\Controllers\Security\RoleController;
-use App\Http\Controllers\Security\TenantController;
-use App\Http\Controllers\Security\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,8 +14,23 @@ use Inertia\Inertia;
 |
 */
 
+require_once __DIR__ . '/fortify.php';
+require_once __DIR__ . '/management.php';
+
 Route::get('/', function (\Illuminate\Http\Request $request) {
-    return redirect('/login');
+    return redirect('/management/users');
+});
+
+Route::group([
+    'middleware' => [
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ]
+], function () {
+    Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
+        $tenant = \App\Models\Tenant::current();
+    });
 });
 
 Route::get('/errors', function (\Illuminate\Http\Request $request) {
